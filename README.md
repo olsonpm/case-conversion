@@ -7,3 +7,6 @@ This is a port of [Davis Clark's](https://github.com/jdc0589) [Case Conversion S
 pip install case-conversion
 ```
 
+## Licence
+
+Using [MIT licence](#LICENSE.txt) with Davis Clark's Copyright
