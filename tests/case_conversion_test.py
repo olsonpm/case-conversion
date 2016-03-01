@@ -10,6 +10,8 @@ NO_PRESERVE_CASES = [
     'pascalcase',
     'snakecase',
     'dashcase',
+    'spinalcase',
+    'kebabcase',
     'constcase',
     'dotcase',
 ]
@@ -25,6 +27,8 @@ VALUES = {
     'pascalcase': 'FooBarString',
     'snakecase': 'foo_bar_string',
     'dashcase': 'foo-bar-string',
+    'spinalcase': 'foo-bar-string',
+    'kebabcase': 'foo-bar-string',
     'constcase': 'FOO_BAR_STRING',
     'dotcase': 'foo.bar.string',
     'separate_words': 'foo bar string',
