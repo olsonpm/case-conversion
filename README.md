@@ -9,4 +9,4 @@ pip install case-conversion
 
 ## Licence
 
-Using [MIT licence](#LICENSE.txt) with Davis Clark's Copyright
+Using [MIT licence](LICENSE.txt) with Davis Clark's Copyright
