@@ -1,4 +1,4 @@
-import re
+import regex
 import sys
 
 PYTHON = sys.version_info[0]
@@ -23,10 +23,10 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
 
     TODO: include unicode characters.
     """
-    lower = re.compile('^[a-z0-9]$')
-    upper = re.compile('^[A-Z]$')
-    sep = re.compile('^[^a-zA-Z0-9]$')
-    notsep = re.compile('^[a-zA-Z0-9]$')
+    # lower = regex.compile('^[\p{Ll}\p{Nd}]$')
+    upper = regex.compile(u'^[\p{Lu}]$')
+    sep = regex.compile(u'^[^\p{Ll}\p{Lu}\p{Nd}]$')
+    notsep = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]$')
 
     words = []
     hasSep = False
@@ -92,7 +92,7 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
 
             # Sanitize acronyms list by discarding invalid acronyms and
             # normalizing valid ones to upper-case.
-            validacronym = re.compile('^[a-zA-Z0-9]+$')
+            validacronym = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]+$')
             unsafeacronyms = acronyms
             acronyms = []
             for a in unsafeacronyms:
@@ -115,7 +115,7 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
                 # Search for each acronym in acstr.
                 for acronym in acronyms:
                     #TODO: Sanitize acronyms to include only letters.
-                    rac = re.compile(acronym)
+                    rac = regex.compile(unicode(acronym))
 
                     # Loop so that all instances of the acronym are found, instead
                     # of just the first.
@@ -180,20 +180,21 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
         # Find runs of single upper-case letters.
         while i < len(words):
             word = words[i]
-            if word != None and upper.match(word):
-                if s == None: s = i
-            elif s != None:
+            if word is not None and upper.match(word):
+                if s is None:
+                    s = i
+            elif s is not None:
                 i = checkAcronym(s, i) + 1
                 s = None
 
             i += 1
 
-        if s != None:
+        if s is not None:
             checkAcronym(s, i)
 
     # Separators are no longer needed, so they can be removed. They *should*
     # be removed, since it's supposed to be a *word* list.
-    words = [w for w in words if w != None]
+    words = [w for w in words if w is not None]
 
     # Determine case type.
     caseType = 'unknown'
@@ -210,7 +211,8 @@ def parseVariable(var, detectAcronyms=True, acronyms=[], preserveCase=False):
                 c = word.istitle() or word.isupper()
                 camelCase &= c
                 pascalCase &= c
-                if not c: break
+                if not c:
+                    break
 
         if camelCase:
             caseType = 'camel'
