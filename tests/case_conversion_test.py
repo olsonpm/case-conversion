@@ -195,7 +195,7 @@ class CaseConversionTest(TestCase):
     def test_acronyms(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that don't preserve
-        capital/lower case letters
+        capital/lower case letters (with acronym detection)
         """
         case_converter = getattr(case_conversion, case)
         result = case_converter(value, detectAcronyms=True, acronyms=ACRONYMS)
@@ -206,7 +206,8 @@ class CaseConversionTest(TestCase):
     def test_acronyms_unicode(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that don't preserve
-        capital/lower case letters (with unicode characters)
+        capital/lower case letters (with acronym detection and unicode
+        characters)
         """
         case_converter = getattr(case_conversion, case)
         result = case_converter(value, detectAcronyms=True,
@@ -218,7 +219,7 @@ class CaseConversionTest(TestCase):
     def test_acronyms_preserve_case(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that do preserve
-        capital/lower case letters
+        capital/lower case letters (with acronym detection)
         """
         case_converter = getattr(case_conversion, case)
         result = case_converter(value, detectAcronyms=True, acronyms=ACRONYMS)
@@ -229,7 +230,8 @@ class CaseConversionTest(TestCase):
     def test_acronyms_preserve_case_unicode(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that do preserve
-        capital/lower case letters
+        capital/lower case letters (with acronym detection and unicode
+        characters)
         """
         case_converter = getattr(case_conversion, case)
         result = case_converter(value, detectAcronyms=True,
