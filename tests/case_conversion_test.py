@@ -54,6 +54,34 @@ VALUES_UNICODE = {
     'backslashcase': u'fóo\\bar\\string',
 }
 
+VALUES_SINGLE = {
+    'camelcase': 'foo',
+    'pascalcase': 'Foo',
+    'snakecase': 'foo',
+    'dashcase': 'foo',
+    'spinalcase': 'foo',
+    'kebabcase': 'foo',
+    'constcase': 'FOO',
+    'dotcase': 'foo',
+    'separate_words': 'foo',
+    'slashcase': 'foo',
+    'backslashcase': 'foo',
+}
+
+VALUES_SINGLE_UNICODE = {
+    'camelcase': u'fóo',
+    'pascalcase': u'Fóo',
+    'snakecase': u'fóo',
+    'dashcase': u'fóo',
+    'spinalcase': u'fóo',
+    'kebabcase': u'fóo',
+    'constcase': u'FÓO',
+    'dotcase': u'fóo',
+    'separate_words': u'fóo',
+    'slashcase': u'fóo',
+    'backslashcase': u'fóo',
+}
+
 VALUES_ACRONYM = {
     'camelcase': 'fooHTTPBarString',
     'pascalcase': 'FooHTTPBarString',
@@ -112,6 +140,36 @@ PRESERVE_VALUES_UNICODE = {
                       'default': u'fóo\\bar\\string'},
 }
 
+PRESERVE_VALUES_SINGLE = {
+    'separate_words': {'camelcase': 'foo',
+                       'pascalcase': 'Foo',
+                       'constcase': 'FOO',
+                       'default': 'foo'},
+    'slashcase': {'camelcase': 'foo',
+                  'pascalcase': 'Foo',
+                  'constcase': 'FOO',
+                  'default': 'foo'},
+    'backslashcase': {'camelcase': 'foo',
+                      'pascalcase': 'Foo',
+                      'constcase': 'FOO',
+                      'default': 'foo'},
+}
+
+PRESERVE_VALUES_SINGLE_UNICODE = {
+    'separate_words': {'camelcase': u'fóo',
+                       'pascalcase': u'Fóo',
+                       'constcase': u'FÓO',
+                       'default': u'fóo'},
+    'slashcase': {'camelcase': u'fóo',
+                  'pascalcase': u'Fóo',
+                  'constcase': u'FÓO',
+                  'default': u'fóo'},
+    'backslashcase': {'camelcase': u'fóo',
+                      'pascalcase': u'Fóo',
+                      'constcase': u'FÓO',
+                      'default': u'fóo'},
+}
+
 PRESERVE_VALUES_ACRONYM = {
     'separate_words': {'camelcase': 'foo HTTP Bar String',
                        'pascalcase': 'Foo HTTP Bar String',
@@ -142,6 +200,22 @@ PRESERVE_VALUES_ACRONYM_UNICODE = {
                       'default': u'foo\\héép\\bar\\string'},
 }
 
+
+PRESERVE_VALUES_ACRONYM_SINGLE = {
+    'separate_words': {'camelcase': 'HTTP',
+                       'pascalcase': 'HTTP',
+                       'constcase': 'HTTP',
+                       'default': 'http'},
+    'slashcase': {'camelcase': 'HTTP',
+                  'pascalcase': 'HTTP',
+                  'constcase': 'HTTP',
+                  'default': 'http'},
+    'backslashcase': {'camelcase': 'HTTP',
+                      'pascalcase': 'HTTP',
+                      'constcase': 'HTTP',
+                      'default': 'http'},
+}
+
 CAPITAL_CASES = [
     'camelcase',
     'pascalcase',
@@ -149,9 +223,16 @@ CAPITAL_CASES = [
 ]
 
 
+def _expand_values(values):
+    return [item for sublist in [[(name + '2' + case, case, value, values[case]) for name, value in values.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist]  # nopep8
+
+
+def _expand_values_preserve(preserve_values, values):
+    return [item for sublist in [[(name + '2' + case, case, value, preserve_values[case][name if name in CAPITAL_CASES else 'default']) for name, value in values.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist]  # nopep8
+
+
 class CaseConversionTest(TestCase):
-    @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, VALUES[case]) for name, value in VALUES.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist])  # nopep8
+    @parameterized.expand(_expand_values(VALUES))
     def test(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that don't preserve
@@ -160,8 +241,7 @@ class CaseConversionTest(TestCase):
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, VALUES_UNICODE[case]) for name, value in VALUES_UNICODE.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist])  # nopep8
+    @parameterized.expand(_expand_values(VALUES_UNICODE))
     def test_unicode(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that don't preserve
@@ -170,8 +250,25 @@ class CaseConversionTest(TestCase):
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, PRESERVE_VALUES[case][name if name in CAPITAL_CASES else 'default']) for name, value in VALUES.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist])  # nopep8
+    @parameterized.expand(_expand_values(VALUES_SINGLE))
+    def test_single(self, _, case, value, expected):
+        """
+        Tests conversions from all cases to all cases that don't preserve
+        capital/lower case letters
+        """
+        case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+    @parameterized.expand(_expand_values(VALUES_SINGLE_UNICODE))
+    def test_single_unicode(self, _, case, value, expected):
+        """
+        Tests conversions from all cases to all cases that don't preserve
+        capital/lower case letters
+        """
+        case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+    @parameterized.expand(_expand_values_preserve(PRESERVE_VALUES, VALUES))
     def test_preserve_case(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that do preserve
@@ -181,7 +278,7 @@ class CaseConversionTest(TestCase):
         self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, PRESERVE_VALUES_UNICODE[case][name if name in CAPITAL_CASES else 'default']) for name, value in VALUES_UNICODE.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist])  # nopep8
+        _expand_values_preserve(PRESERVE_VALUES_UNICODE, VALUES_UNICODE))
     def test_preserve_case_unicode(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that do preserve
@@ -191,18 +288,37 @@ class CaseConversionTest(TestCase):
         self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, VALUES_ACRONYM[case]) for name, value in VALUES_ACRONYM.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist])  # nopep8
+        _expand_values_preserve(PRESERVE_VALUES_SINGLE, VALUES_SINGLE))
+    def test_preserve_case_single(self, _, case, value, expected):
+        """
+        Tests conversions from all cases to all cases that do preserve
+        capital/lower case letters
+        """
+        case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+    @parameterized.expand(
+        _expand_values_preserve(PRESERVE_VALUES_SINGLE_UNICODE,
+                                VALUES_SINGLE_UNICODE))
+    def test_preserve_case_single_unicode(self, _, case, value, expected):
+        """
+        Tests conversions from all cases to all cases that do preserve
+        capital/lower case letters
+        """
+        case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+    @parameterized.expand(_expand_values(VALUES_ACRONYM))
     def test_acronyms(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that don't preserve
         capital/lower case letters (with acronym detection)
         """
         case_converter = getattr(case_conversion, case)
-        result = case_converter(value, detectAcronyms=True, acronyms=ACRONYMS)
+        result = case_converter(value, detect_acronyms=True, acronyms=ACRONYMS)
         self.assertEqual(result, expected)
 
-    @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, VALUES_ACRONYM_UNICODE[case]) for name, value in VALUES_ACRONYM_UNICODE.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist])  # nopep8
+    @parameterized.expand(_expand_values(VALUES_ACRONYM_UNICODE))
     def test_acronyms_unicode(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that don't preserve
@@ -210,23 +326,24 @@ class CaseConversionTest(TestCase):
         characters)
         """
         case_converter = getattr(case_conversion, case)
-        result = case_converter(value, detectAcronyms=True,
+        result = case_converter(value, detect_acronyms=True,
                                 acronyms=ACRONYMS_UNICODE)
         self.assertEqual(result, expected)
 
     @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, PRESERVE_VALUES_ACRONYM[case][name if name in CAPITAL_CASES else 'default']) for name, value in VALUES_ACRONYM.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist])  # nopep8
+        _expand_values_preserve(PRESERVE_VALUES_ACRONYM, VALUES_ACRONYM))
     def test_acronyms_preserve_case(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that do preserve
         capital/lower case letters (with acronym detection)
         """
         case_converter = getattr(case_conversion, case)
-        result = case_converter(value, detectAcronyms=True, acronyms=ACRONYMS)
+        result = case_converter(value, detect_acronyms=True, acronyms=ACRONYMS)
         self.assertEqual(result, expected)
 
     @parameterized.expand(
-        [item for sublist in [[(name + '2' + case, case, value, PRESERVE_VALUES_ACRONYM_UNICODE[case][name if name in CAPITAL_CASES else 'default']) for name, value in VALUES_ACRONYM_UNICODE.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist])  # nopep8
+        _expand_values_preserve(PRESERVE_VALUES_ACRONYM_UNICODE,
+                                VALUES_ACRONYM_UNICODE))
     def test_acronyms_preserve_case_unicode(self, _, case, value, expected):
         """
         Tests conversions from all cases to all cases that do preserve
@@ -234,7 +351,7 @@ class CaseConversionTest(TestCase):
         characters)
         """
         case_converter = getattr(case_conversion, case)
-        result = case_converter(value, detectAcronyms=True,
+        result = case_converter(value, detect_acronyms=True,
                                 acronyms=ACRONYMS_UNICODE)
         self.assertEqual(result, expected)
 

@@ -10,56 +10,59 @@ else:
     import case_parse
 
 
-def camelcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+def camelcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
     if words:
         words[0] = words[0].lower()
     return ''.join(words)
 
 
-def pascalcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+def pascalcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
     return ''.join(words)
 
 
-def snakecase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+def snakecase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
     return '_'.join([w.lower() for w in words])
 
 
-def dashcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+def dashcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
     return '-'.join([w.lower() for w in words])
 
 
-def kebabcase(text, detectAcronyms=False, acronyms=[]):
-    return dashcase(text, detectAcronyms, acronyms)
+def kebabcase(text, detect_acronyms=False, acronyms=[]):
+    return dashcase(text, detect_acronyms, acronyms)
 
 
-def spinalcase(text, detectAcronyms=False, acronyms=[]):
-    return dashcase(text, detectAcronyms, acronyms)
+def spinalcase(text, detect_acronyms=False, acronyms=[]):
+    return dashcase(text, detect_acronyms, acronyms)
 
 
-def constcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+def constcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
     return '_'.join([w.upper() for w in words])
 
 
-def dotcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms)
+def dotcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
     return '.'.join([w.lower() for w in words])
 
 
-def separate_words(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, preserveCase=True)
+def separate_words(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(
+        text, detect_acronyms, acronyms, preserve_case=True)
     return ' '.join(words)
 
 
-def slashcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, preserveCase=True)
+def slashcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(
+        text, detect_acronyms, acronyms, preserve_case=True)
     return '/'.join(words)
 
 
-def backslashcase(text, detectAcronyms=False, acronyms=[]):
-    words, case, sep = case_parse.parseVariable(text, detectAcronyms, acronyms, preserveCase=True)
+def backslashcase(text, detect_acronyms=False, acronyms=[]):
+    words, case, sep = case_parse.parse_case(
+        text, detect_acronyms, acronyms, preserve_case=True)
     return '\\'.join(words)
