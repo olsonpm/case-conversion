@@ -18,6 +18,7 @@ This is a port of the [CaseConversion Sublime Plugin](https://github.com/jdc0589
   - `separate_words`
   - `slashcase`
   - `backslashcase`
+- Oh! Python2 and Python3 supported!
 
 
 ##### Usage
