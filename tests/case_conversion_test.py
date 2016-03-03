@@ -253,8 +253,8 @@ class CaseConversionTest(TestCase):
     @parameterized.expand(_expand_values(VALUES_SINGLE))
     def test_single(self, _, case, value, expected):
         """
-        Tests conversions from all cases to all cases that don't preserve
-        capital/lower case letters
+        Tests conversions of single words from all cases to all cases that
+        don't preserve capital/lower case letters
         """
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
@@ -262,8 +262,8 @@ class CaseConversionTest(TestCase):
     @parameterized.expand(_expand_values(VALUES_SINGLE_UNICODE))
     def test_single_unicode(self, _, case, value, expected):
         """
-        Tests conversions from all cases to all cases that don't preserve
-        capital/lower case letters
+        Tests conversions of single words from all cases to all cases that
+        don't preserve capital/lower case letters (with unicode characters)
         """
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
@@ -291,8 +291,8 @@ class CaseConversionTest(TestCase):
         _expand_values_preserve(PRESERVE_VALUES_SINGLE, VALUES_SINGLE))
     def test_preserve_case_single(self, _, case, value, expected):
         """
-        Tests conversions from all cases to all cases that do preserve
-        capital/lower case letters
+        Tests conversions of single words from all cases to all cases that do
+        preserve capital/lower case letters
         """
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
@@ -302,8 +302,8 @@ class CaseConversionTest(TestCase):
                                 VALUES_SINGLE_UNICODE))
     def test_preserve_case_single_unicode(self, _, case, value, expected):
         """
-        Tests conversions from all cases to all cases that do preserve
-        capital/lower case letters
+        Tests conversions of single words from all cases to all cases that do
+        preserve capital/lower case letters (with unicode characters)
         """
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
