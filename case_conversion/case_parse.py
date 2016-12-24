@@ -1,8 +1,8 @@
 import regex
 import sys
 
-PYTHON = sys.version_info[0]
-if 3 == PYTHON:
+PYTHON2 = sys.version_info[0] < 3
+if not PYTHON2:
     xrange = range
     unicode = str
 
