@@ -4,6 +4,7 @@ import sys
 PYTHON = sys.version_info[0]
 if 3 == PYTHON:
     xrange = range
+    unicode = str
 
 
 def parse_case(var, detect_acronyms=True, acronyms=[], preserve_case=False):
