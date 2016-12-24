@@ -1,7 +1,7 @@
 from setuptools import setup
 setup(
   name='case_conversion',
-  version='2.0.0',
+  version='2.0.1',
   packages=['case_conversion'],
   install_requires=['regex>=2016.2.25'],
   description='Convert between different types of cases (unicode supported)',

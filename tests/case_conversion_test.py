@@ -224,11 +224,11 @@ CAPITAL_CASES = [
 
 
 def _expand_values(values):
-    return [item for sublist in [[(name + '2' + case, case, value, values[case]) for name, value in values.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist]  # nopep8
+    return [item for sublist in [[(name + '2' + case, case, value, values[case]) for name, value in values.items()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist]  # nopep8
 
 
 def _expand_values_preserve(preserve_values, values):
-    return [item for sublist in [[(name + '2' + case, case, value, preserve_values[case][name if name in CAPITAL_CASES else 'default']) for name, value in values.iteritems()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist]  # nopep8
+    return [item for sublist in [[(name + '2' + case, case, value, preserve_values[case][name if name in CAPITAL_CASES else 'default']) for name, value in values.items()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist]  # nopep8
 
 
 class CaseConversionTest(TestCase):
