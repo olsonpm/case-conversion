@@ -17,6 +17,7 @@ CASES = [
     'spinalcase',
     'kebabcase',
     'constcase',
+    'screaming_snakecase',
     'dotcase',
 ]
 
@@ -34,6 +35,7 @@ VALUES = {
     'spinalcase': 'foo-bar-string',
     'kebabcase': 'foo-bar-string',
     'constcase': 'FOO_BAR_STRING',
+    'screaming_snakecase': 'FOO_BAR_STRING',
     'dotcase': 'foo.bar.string',
     'separate_words': 'foo bar string',
     'slashcase': 'foo/bar/string',
@@ -48,6 +50,7 @@ VALUES_UNICODE = {
     'spinalcase': u'fóo-bar-string',
     'kebabcase': u'fóo-bar-string',
     'constcase': u'FÓO_BAR_STRING',
+    'screaming_snakecase': u'FÓO_BAR_STRING',
     'dotcase': u'fóo.bar.string',
     'separate_words': u'fóo bar string',
     'slashcase': u'fóo/bar/string',
@@ -62,6 +65,7 @@ VALUES_SINGLE = {
     'spinalcase': 'foo',
     'kebabcase': 'foo',
     'constcase': 'FOO',
+    'screaming_snakecase': 'FOO',
     'dotcase': 'foo',
     'separate_words': 'foo',
     'slashcase': 'foo',
@@ -76,6 +80,7 @@ VALUES_SINGLE_UNICODE = {
     'spinalcase': u'fóo',
     'kebabcase': u'fóo',
     'constcase': u'FÓO',
+    'screaming_snakecase': u'FÓO',
     'dotcase': u'fóo',
     'separate_words': u'fóo',
     'slashcase': u'fóo',
@@ -90,6 +95,7 @@ VALUES_ACRONYM = {
     'spinalcase': 'foo-http-bar-string',
     'kebabcase': 'foo-http-bar-string',
     'constcase': 'FOO_HTTP_BAR_STRING',
+    'screaming_snakecase': 'FOO_HTTP_BAR_STRING',
     'dotcase': 'foo.http.bar.string',
     'separate_words': 'foo http bar string',
     'slashcase': 'foo/http/bar/string',
@@ -104,6 +110,7 @@ VALUES_ACRONYM_UNICODE = {
     'spinalcase': u'foo-héép-bar-string',
     'kebabcase': u'foo-héép-bar-string',
     'constcase': u'FOO_HÉÉP_BAR_STRING',
+    'screaming_snakecase': u'FOO_HÉÉP_BAR_STRING',
     'dotcase': u'foo.héép.bar.string',
     'separate_words': u'foo héép bar string',
     'slashcase': u'foo/héép/bar/string',
@@ -114,14 +121,17 @@ PRESERVE_VALUES = {
     'separate_words': {'camelcase': 'foo Bar String',
                        'pascalcase': 'Foo Bar String',
                        'constcase': 'FOO BAR STRING',
+                       'screaming_snakecase': 'FOO BAR STRING',
                        'default': 'foo bar string'},
     'slashcase': {'camelcase': 'foo/Bar/String',
                   'pascalcase': 'Foo/Bar/String',
                   'constcase': 'FOO/BAR/STRING',
+                  'screaming_snakecase': 'FOO/BAR/STRING',
                   'default': 'foo/bar/string'},
     'backslashcase': {'camelcase': 'foo\\Bar\\String',
                       'pascalcase': 'Foo\\Bar\\String',
                       'constcase': 'FOO\\BAR\\STRING',
+                      'screaming_snakecase': 'FOO\\BAR\\STRING',
                       'default': 'foo\\bar\\string'},
 }
 
@@ -129,14 +139,17 @@ PRESERVE_VALUES_UNICODE = {
     'separate_words': {'camelcase': u'fóo Bar String',
                        'pascalcase': u'Fóo Bar String',
                        'constcase': u'FÓO BAR STRING',
+                       'screaming_snakecase': u'FÓO BAR STRING',
                        'default': u'fóo bar string'},
     'slashcase': {'camelcase': u'fóo/Bar/String',
                   'pascalcase': u'Fóo/Bar/String',
                   'constcase': u'FÓO/BAR/STRING',
+                  'screaming_snakecase': u'FÓO/BAR/STRING',
                   'default': u'fóo/bar/string'},
     'backslashcase': {'camelcase': u'fóo\\Bar\\String',
                       'pascalcase': u'Fóo\\Bar\\String',
                       'constcase': u'FÓO\\BAR\\STRING',
+                      'screaming_snakecase': u'FÓO\\BAR\\STRING',
                       'default': u'fóo\\bar\\string'},
 }
 
@@ -144,14 +157,17 @@ PRESERVE_VALUES_SINGLE = {
     'separate_words': {'camelcase': 'foo',
                        'pascalcase': 'Foo',
                        'constcase': 'FOO',
+                       'screaming_snakecase': 'FOO',
                        'default': 'foo'},
     'slashcase': {'camelcase': 'foo',
                   'pascalcase': 'Foo',
                   'constcase': 'FOO',
+                  'screaming_snakecase': 'FOO',
                   'default': 'foo'},
     'backslashcase': {'camelcase': 'foo',
                       'pascalcase': 'Foo',
                       'constcase': 'FOO',
+                      'screaming_snakecase': 'FOO',
                       'default': 'foo'},
 }
 
@@ -159,14 +175,17 @@ PRESERVE_VALUES_SINGLE_UNICODE = {
     'separate_words': {'camelcase': u'fóo',
                        'pascalcase': u'Fóo',
                        'constcase': u'FÓO',
+                       'screaming_snakecase': u'FÓO',
                        'default': u'fóo'},
     'slashcase': {'camelcase': u'fóo',
                   'pascalcase': u'Fóo',
                   'constcase': u'FÓO',
+                  'screaming_snakecase': u'FÓO',
                   'default': u'fóo'},
     'backslashcase': {'camelcase': u'fóo',
                       'pascalcase': u'Fóo',
                       'constcase': u'FÓO',
+                      'screaming_snakecase': u'FÓO',
                       'default': u'fóo'},
 }
 
@@ -174,14 +193,17 @@ PRESERVE_VALUES_ACRONYM = {
     'separate_words': {'camelcase': 'foo HTTP Bar String',
                        'pascalcase': 'Foo HTTP Bar String',
                        'constcase': 'FOO HTTP BAR STRING',
+                       'screaming_snakecase': 'FOO HTTP BAR STRING',
                        'default': 'foo http bar string'},
     'slashcase': {'camelcase': 'foo/HTTP/Bar/String',
                   'pascalcase': 'Foo/HTTP/Bar/String',
                   'constcase': 'FOO/HTTP/BAR/STRING',
+                  'screaming_snakecase': 'FOO/HTTP/BAR/STRING',
                   'default': 'foo/http/bar/string'},
     'backslashcase': {'camelcase': 'foo\\HTTP\\Bar\\String',
                       'pascalcase': 'Foo\\HTTP\\Bar\\String',
                       'constcase': 'FOO\\HTTP\\BAR\\STRING',
+                      'screaming_snakecase': 'FOO\\HTTP\\BAR\\STRING',
                       'default': 'foo\\http\\bar\\string'},
 }
 
@@ -189,14 +211,17 @@ PRESERVE_VALUES_ACRONYM_UNICODE = {
     'separate_words': {'camelcase': u'foo HÉÉP Bar String',
                        'pascalcase': u'Foo HÉÉP Bar String',
                        'constcase': u'FOO HÉÉP BAR STRING',
+                       'screaming_snakecase': u'FOO HÉÉP BAR STRING',
                        'default': u'foo héép bar string'},
     'slashcase': {'camelcase': u'foo/HÉÉP/Bar/String',
                   'pascalcase': u'Foo/HÉÉP/Bar/String',
                   'constcase': u'FOO/HÉÉP/BAR/STRING',
+                  'screaming_snakecase': u'FOO/HÉÉP/BAR/STRING',
                   'default': u'foo/héép/bar/string'},
     'backslashcase': {'camelcase': u'foo\\HÉÉP\\Bar\\String',
                       'pascalcase': u'Foo\\HÉÉP\\Bar\\String',
                       'constcase': u'FOO\\HÉÉP\\BAR\\STRING',
+                      'screaming_snakecase': u'FOO\\HÉÉP\\BAR\\STRING',
                       'default': u'foo\\héép\\bar\\string'},
 }
 
@@ -205,14 +230,17 @@ PRESERVE_VALUES_ACRONYM_SINGLE = {
     'separate_words': {'camelcase': 'HTTP',
                        'pascalcase': 'HTTP',
                        'constcase': 'HTTP',
+                       'screaming_snakecase': 'HTTP',
                        'default': 'http'},
     'slashcase': {'camelcase': 'HTTP',
                   'pascalcase': 'HTTP',
                   'constcase': 'HTTP',
+                  'screaming_snakecase': 'HTTP',
                   'default': 'http'},
     'backslashcase': {'camelcase': 'HTTP',
                       'pascalcase': 'HTTP',
                       'constcase': 'HTTP',
+                      'screaming_snakecase': 'HTTP',
                       'default': 'http'},
 }
 
@@ -220,15 +248,35 @@ CAPITAL_CASES = [
     'camelcase',
     'pascalcase',
     'constcase',
+    'screaming_snakecase',
 ]
 
 
 def _expand_values(values):
-    return [item for sublist in [[(name + '2' + case, case, value, values[case]) for name, value in values.items()] + [(case + '_empty', case, '', '')] for case in CASES] for item in sublist]  # nopep8
+    test_params = []
+    for case in CASES:
+        test_params.extend([
+            (name + '2' + case,
+             case,
+             value,
+             values[case]) for name, value in values.items()
+        ])
+        test_params.append((case + '_empty', case, '', ''))
+    return test_params
 
 
 def _expand_values_preserve(preserve_values, values):
-    return [item for sublist in [[(name + '2' + case, case, value, preserve_values[case][name if name in CAPITAL_CASES else 'default']) for name, value in values.items()] + [(case + '_empty', case, '', '')] for case in CASES_PRESERVE] for item in sublist]  # nopep8
+    test_params = []
+    for case in CASES_PRESERVE:
+        test_params.extend([
+            (name + '2' + case,
+             case,
+             value,
+             preserve_values[case][name if name in CAPITAL_CASES else 'default'])  # nopep8
+            for name, value in values.items()
+        ])
+        test_params.append((case + '_empty', case, '', ''))
+    return test_params
 
 
 class CaseConversionTest(TestCase):
