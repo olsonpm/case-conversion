@@ -23,7 +23,7 @@ def camelcase(text, acronyms=None):
     >>> camelcase("HELLO_HTML_WORLD", True, ["HTML"])
     'helloHTMLWorld'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     if words:
         words[0] = words[0].lower()
     return ''.join(words)
@@ -42,7 +42,7 @@ def pascalcase(text, acronyms=None):
     >>> pascalcase("HELLO_HTML_WORLD", True, ["HTML"])
     'HelloHTMLWorld'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return ''.join(words)
 
 
@@ -59,7 +59,7 @@ def snakecase(text, acronyms=None):
     >>> snakecase("HelloHTMLWorld", True, ["HTML"])
     'hello_html_world'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '_'.join([w.lower() for w in words])
 
 
@@ -76,7 +76,7 @@ def dashcase(text, acronyms=None):
     >>> dashcase("HelloHTMLWorld", True, ["HTML"])
     'hello-html-world'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '-'.join([w.lower() for w in words])
 
 
@@ -125,7 +125,7 @@ def constcase(text, acronyms=None):
     >>> constcase("helloHTMLWorld", True, ["HTML"])
     'HELLO_HTML_WORLD'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '_'.join([w.upper() for w in words])
 
 
@@ -158,7 +158,7 @@ def dotcase(text, acronyms=None):
     >>> dotcase("helloHTMLWorld", True, ["HTML"])
     'hello.html.world'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '.'.join([w.lower() for w in words])
 
 
@@ -175,7 +175,7 @@ def separate_words(text, acronyms=None):
     >>> separate_words("helloHTMLWorld", True, ["HTML"])
     'hello HTML World'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms, preserve_case=True)
+    words, _case, _sep = case_parse.parse_case(text, acronyms, preserve_case=True)
     return ' '.join(words)
 
 
@@ -192,7 +192,7 @@ def slashcase(text, acronyms=None):
     >>> slashcase("helloHTMLWorld", True, ["HTML"])
     'hello/HTML/World'
     """
-    words, _, _ = case_parse.parse_case(text, acronyms, preserve_case=True)
+    words, _case, _sep = case_parse.parse_case(text, acronyms, preserve_case=True)
     return '/'.join(words)
 
 
@@ -209,5 +209,5 @@ def backslashcase(text, acronyms=None):
     >>> backslashcase("helloHTMLWorld", True, ["HTML"]) == r'hello\HTML\World'
     True
     """
-    words, _, _ = case_parse.parse_case(text, acronyms, preserve_case=True)
+    words, _case, _sep = case_parse.parse_case(text, acronyms, preserve_case=True)
     return '\\'.join(words)

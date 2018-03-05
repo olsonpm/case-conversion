@@ -13,6 +13,26 @@ NOTSEP = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]$')
 
 
 def _determine_case(was_upper, words, string):
+    """
+    Determine case type of string.
+
+    Arguments:
+        was_upper {[type]} -- [description]
+        words {[type]} -- [description]
+        string {[type]} -- [description]
+
+    Returns:
+        - upper: All words are upper-case.
+        - lower: All words are lower-case.
+        - pascal: All words are title-case or upper-case. Note that the
+                  stringiable may still have separators.
+        - camel: First word is lower-case, the rest are title-case or
+                 upper-case. stringiable may still have separators.
+        - mixed: Any other mixing of word casing. Never occurs if there are
+                 no separators.
+        - unknown: stringiable contains no words.
+
+    """
     case_type = 'unknown'
     if was_upper:
         case_type = 'upper'
@@ -39,11 +59,14 @@ def _determine_case(was_upper, words, string):
 
     return case_type
 
-# Check a run of words represented by the range [s, i]. Should
-# return last index of new word groups.
-
 
 def _advanced_acronym_detection(s, i, words, acronyms):
+    """
+    Detect acronyms by checking against a list of acronyms.
+
+    Check a run of words represented by the range [s, i].
+    Return last index of new word groups.
+    """
     # Combine each letter into single string.
     acstr = ''.join(words[s:i])
 
@@ -99,10 +122,9 @@ def _advanced_acronym_detection(s, i, words, acronyms):
 
     return s + len(range_list) - 1
 
-# Fallback to simple acronym detection.
-
 
 def _simple_acronym_detection(s, i, words, *args):
+    """Detect acronyms based on runs of upper-case letters."""
     # Combine each letter into a single string.
     acronym = ''.join(words[s:i])
 
@@ -126,8 +148,12 @@ class InvalidAcronymError(Exception):
 
 
 def _sanitize_acronyms(unsafe_acronyms):
-    # Sanitize acronyms list by discarding invalid acronyms and
-    # normalizing valid ones to upper-case.
+    """
+    Check acronyms against regex.
+
+    Normalize valid acronyms to upper-case.
+    If an invalid acronym is encountered raise InvalidAcronymError.
+    """
     valid_acronym = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]+$')
     acronyms = []
     for a in unsafe_acronyms:
@@ -153,6 +179,17 @@ def _normalize_words(words, acronyms):
 
 
 def _separate_words(string):
+    """
+    Segment string on separator into list of words.
+
+    Arguments:
+        string -- the string we want to process
+
+    Returns:
+        words -- list of words the string got minced to
+        separator -- the separator char intersecting words
+        was_upper -- whether string happened to be upper-case
+    """
     words = []
     separator = ""
 
@@ -229,10 +266,10 @@ def parse_case(string, acronyms=None, preserve_case=False):
         - mixed: Any other mixing of word casing. Never occurs if there are
                  no separators.
         - unknown: stringiable contains no words.
+
     Also returns the first separator character, or False if there isn't one.
 
     """
-
     words, separator, was_upper = _separate_words(string)
 
     if acronyms:
@@ -241,6 +278,7 @@ def parse_case(string, acronyms=None, preserve_case=False):
         check_acronym = _advanced_acronym_detection
     else:
         acronyms = []
+        # Fallback to simple acronym detection.
         check_acronym = _simple_acronym_detection
 
     # Letter-run detector
