@@ -10,7 +10,7 @@ else:
     import case_parse
 
 
-def camelcase(text, detect_acronyms=False, acronyms=[]):
+def camelcase(text, acronyms=None):
     """Return text in camelCase style.
 
     Args:
@@ -23,13 +23,13 @@ def camelcase(text, detect_acronyms=False, acronyms=[]):
     >>> camelcase("HELLO_HTML_WORLD", True, ["HTML"])
     'helloHTMLWorld'
     """
-    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     if words:
         words[0] = words[0].lower()
     return ''.join(words)
 
 
-def pascalcase(text, detect_acronyms=False, acronyms=[]):
+def pascalcase(text, acronyms=None):
     """Return text in PascalCase style (aka MixedCase).
 
     Args:
@@ -42,11 +42,11 @@ def pascalcase(text, detect_acronyms=False, acronyms=[]):
     >>> pascalcase("HELLO_HTML_WORLD", True, ["HTML"])
     'HelloHTMLWorld'
     """
-    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return ''.join(words)
 
 
-def snakecase(text, detect_acronyms=False, acronyms=[]):
+def snakecase(text, acronyms=None):
     """Return text in snake_case style.
 
     Args:
@@ -59,11 +59,11 @@ def snakecase(text, detect_acronyms=False, acronyms=[]):
     >>> snakecase("HelloHTMLWorld", True, ["HTML"])
     'hello_html_world'
     """
-    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '_'.join([w.lower() for w in words])
 
 
-def dashcase(text, detect_acronyms=False, acronyms=[]):
+def dashcase(text, acronyms=None):
     """Return text in dash-case style (aka kebab-case, spinal-case).
 
     Args:
@@ -76,11 +76,11 @@ def dashcase(text, detect_acronyms=False, acronyms=[]):
     >>> dashcase("HelloHTMLWorld", True, ["HTML"])
     'hello-html-world'
     """
-    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '-'.join([w.lower() for w in words])
 
 
-def kebabcase(text, detect_acronyms=False, acronyms=[]):
+def kebabcase(text, acronyms=None):
     """Return text in kebab-case style (aka snake-case, spinal-case).
 
     Args:
@@ -93,10 +93,10 @@ def kebabcase(text, detect_acronyms=False, acronyms=[]):
     >>> kebabcase("HelloHTMLWorld", True, ["HTML"])
     'hello-html-world'
     """
-    return dashcase(text, detect_acronyms, acronyms)
+    return dashcase(text, acronyms)
 
 
-def spinalcase(text, detect_acronyms=False, acronyms=[]):
+def spinalcase(text, acronyms=None):
     """Return text in spinal-case style (aka snake-case, kebab-case).
 
     Args:
@@ -109,10 +109,10 @@ def spinalcase(text, detect_acronyms=False, acronyms=[]):
     >>> spinalcase("HELLO_HTML_WORLD", True, ["HTML"])
     'hello-html-world'
     """
-    return dashcase(text, detect_acronyms, acronyms)
+    return dashcase(text, acronyms)
 
 
-def constcase(text, detect_acronyms=False, acronyms=[]):
+def constcase(text, acronyms=None):
     """Return text in CONST_CASE style (aka SCREAMING_SNAKE_CASE).
 
     Args:
@@ -125,11 +125,11 @@ def constcase(text, detect_acronyms=False, acronyms=[]):
     >>> constcase("helloHTMLWorld", True, ["HTML"])
     'HELLO_HTML_WORLD'
     """
-    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '_'.join([w.upper() for w in words])
 
 
-def screaming_snakecase(text, detect_acronyms=False, acronyms=[]):
+def screaming_snakecase(text, acronyms=None):
     """Return text in SCREAMING_SNAKE_CASE style (aka CONST_CASE).
 
     Args:
@@ -142,10 +142,10 @@ def screaming_snakecase(text, detect_acronyms=False, acronyms=[]):
     >>> screaming_snakecase("helloHTMLWorld", True, ["HTML"])
     'HELLO_HTML_WORLD'
     """
-    return constcase(text, detect_acronyms, acronyms)
+    return constcase(text, acronyms)
 
 
-def dotcase(text, detect_acronyms=False, acronyms=[]):
+def dotcase(text, acronyms=None):
     """Return text in dot.case style.
 
     Args:
@@ -158,11 +158,11 @@ def dotcase(text, detect_acronyms=False, acronyms=[]):
     >>> dotcase("helloHTMLWorld", True, ["HTML"])
     'hello.html.world'
     """
-    words, case, sep = case_parse.parse_case(text, detect_acronyms, acronyms)
+    words, _case, _sep = case_parse.parse_case(text, acronyms)
     return '.'.join([w.lower() for w in words])
 
 
-def separate_words(text, detect_acronyms=False, acronyms=[]):
+def separate_words(text, acronyms=None):
     """Return text in "seperate words" style.
 
     Args:
@@ -175,12 +175,11 @@ def separate_words(text, detect_acronyms=False, acronyms=[]):
     >>> separate_words("helloHTMLWorld", True, ["HTML"])
     'hello HTML World'
     """
-    words, case, sep = case_parse.parse_case(
-        text, detect_acronyms, acronyms, preserve_case=True)
+    words, _case, _sep = case_parse.parse_case(text, acronyms, preserve_case=True)
     return ' '.join(words)
 
 
-def slashcase(text, detect_acronyms=False, acronyms=[]):
+def slashcase(text, acronyms=None):
     """Return text in slash/case style.
 
     Args:
@@ -193,12 +192,11 @@ def slashcase(text, detect_acronyms=False, acronyms=[]):
     >>> slashcase("helloHTMLWorld", True, ["HTML"])
     'hello/HTML/World'
     """
-    words, case, sep = case_parse.parse_case(
-        text, detect_acronyms, acronyms, preserve_case=True)
+    words, _case, _sep = case_parse.parse_case(text, acronyms, preserve_case=True)
     return '/'.join(words)
 
 
-def backslashcase(text, detect_acronyms=False, acronyms=[]):
+def backslashcase(text, acronyms=None):
     """Return text in backslash\case style.
 
     Args:
@@ -211,6 +209,5 @@ def backslashcase(text, detect_acronyms=False, acronyms=[]):
     >>> backslashcase("helloHTMLWorld", True, ["HTML"]) == r'hello\HTML\World'
     True
     """
-    words, case, sep = case_parse.parse_case(
-        text, detect_acronyms, acronyms, preserve_case=True)
+    words, _case, _sep = case_parse.parse_case(text, acronyms, preserve_case=True)
     return '\\'.join(words)
