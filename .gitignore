@@ -108,3 +108,6 @@ venv.bak/
 # Sublime Text
 *.sublime-project
 *.sublime-workspace
+
+# Project specific
+tst.py
