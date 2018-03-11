@@ -7,7 +7,6 @@ if not PYTHON2:
     xrange = range
     unicode = str
 
-
 UPPER = regex.compile(u'^[\p{Lu}]$')
 SEP = regex.compile(u'^[^\p{Ll}\p{Lu}\p{Nd}]$')
 NOTSEP = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]$')
@@ -515,3 +514,29 @@ class CaseConverter(object):
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
         return '\\'.join(words)
+
+    @classmethod
+    def ada(cls, text, acronyms=None):
+        r"""Return text in Ada_Case style."""
+        words, _case, _sep = cls.parse_case(text, acronyms)
+        return '_'.join([w.capitalize() for w in words])
+
+    @classmethod
+    def title(cls, text, acronyms=None):
+        r"""Return text in Title_case style."""
+        return cls.snake(text, acronyms).capitalize()
+
+    @classmethod
+    def lower(cls, text, acronyms=None):
+        r"""Return text in lowercase style."""
+        return text.lower()
+
+    @classmethod
+    def upper(cls, text, acronyms=None):
+        r"""Return text in UPPERCASE style."""
+        return text.upper()
+
+    @classmethod
+    def capital(cls, text, acronyms=None):
+        r"""Return text in UPPERCASE style."""
+        return text.capitalize()
