@@ -410,7 +410,7 @@ class CaseConverter(object):
         words, _case, _sep = cls.parse_case(text, acronyms)
         return '_'.join([w.lower() for w in words])
 
-    @alias('kebap', 'spinal')
+    @alias('kebap', 'spinal', 'slug')
     @classmethod
     def dash(cls, text, acronyms=None):
         """Return text in dash-case style (aka kebab-case, spinal-case).
@@ -515,6 +515,7 @@ class CaseConverter(object):
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
         return '\\'.join(words)
 
+    @alias('camel_snake')
     @classmethod
     def ada(cls, text, acronyms=None):
         r"""Return text in Ada_Case style."""
@@ -540,3 +541,9 @@ class CaseConverter(object):
     def capital(cls, text, acronyms=None):
         r"""Return text in UPPERCASE style."""
         return text.capitalize()
+
+    @classmethod
+    def http_header(cls, text, acronyms=None):
+        r"""Return text in Http-Header-Case style."""
+        words, _case, _sep = cls.parse_case(text, acronyms)
+        return '-'.join([w.capitalize() for w in words])
