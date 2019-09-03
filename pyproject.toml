@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "po.case_conversion"
+version = "0.1.0"
+description = "Convert between different types of cases (unicode supported)"
+authors = ["Alejandro Frias <joker454@gmail.com>", "Philip Olson <philip.olson@pm.me>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/olsonpm/case-conversion"
+include = ["LICENSE.txt"]
+packages = [
+  { include = "po" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+
+[tool.poetry.dev-dependencies]
+toml = "^0.10.0"
+is_git_repo_clean = "^0.3.4"
+black = {version = "^18.3-alpha.0",allows-prereleases = true}
+
+[tool.vendorize]
+target = "po/case_conversion/_vendor"
+packages = [
+  "regex>=2016.2.25",
+]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
