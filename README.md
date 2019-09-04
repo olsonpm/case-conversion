@@ -1,8 +1,18 @@
 ### This is a fork
+
 All credit goes to Alejandro Frias - [here is the original repo](github.com//AlejandroFrias/case-conversion).
 I only forked to gain vendorized dependencies.
 
+**differences between my fork and the original**
+
+- I needed to remove the 'regex' dependency because it is not pure python and
+  thus couldn't be vendorized.
+- I removed python2 support. It might be trivial to add later but I don't plan
+  on using python2 personally so if you want to use this fork and need support
+  then create a github issue.
+
 ## Case Conversion
+
 This is a port of the [CaseConversion Sublime Plugin](https://github.com/jdc0589/CaseConversion), by [Davis Clark's](https://github.com/jdc0589), to a regular python package. I couldn't find any other python packages on PyPi at the time (Feb 2016) that could seamlessly convert from any case to any other case without having to specify from what type of case I was converting. This plugin worked really well, so I separated the (non-sublime) python parts of the plugin into this useful python package. I also added Unicode support using the `regex` package. Credit goes to [Davis Clark's](https://github.com/jdc0589) and the contributors to that plugin (Scott Bessler, Curtis Gibby, Matt Morrison) for their awesome work on making such a robust and awesome case converter.
 
 #### Features
@@ -24,7 +34,6 @@ This is a port of the [CaseConversion Sublime Plugin](https://github.com/jdc0589
   - `slashcase`
   - `backslashcase`
 - Oh! Python2 and Python3 supported!
-
 
 ##### Usage
 
@@ -53,7 +62,6 @@ To use acronym detection set `detect_acronyms` to `True` and pass in a list of `
 ```
 pip install case-conversion
 ```
-
 
 ## Licence
 

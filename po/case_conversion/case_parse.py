@@ -1,15 +1,47 @@
-import regex
+import re
 import sys
+import unicodedata
 
-PYTHON2 = sys.version_info[0] < 3
-if not PYTHON2:
-    xrange = range
-    unicode = str
+xrange = range
 
 
-UPPER = regex.compile(u'^[\p{Lu}]$')
-SEP = regex.compile(u'^[^\p{Ll}\p{Lu}\p{Nd}]$')
-NOTSEP = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]$')
+def _charIsSep(aChar):
+    return (
+        not _charIsUpper(aChar)
+        and not _charIsLower(aChar)
+        and not _charIsNumberDecimalDigit(aChar)
+    )
+
+
+def _isSep(aString):
+    return len(aString) == 1 and _charIsSep
+
+
+def _charIsNumberDecimalDigit(aChar):
+    return unicodedata.category(aChar) == "Nd"
+
+
+def _charIsLower(aChar):
+    return unicodedata.category(aChar) == "Ll"
+
+
+def _charIsUpper(aChar):
+    return unicodedata.category(aChar) == "Lu"
+
+
+def _isUpper(aString):
+    return len(aString) == 1 and _charIsUpper(aString)
+
+
+def _isValidAcronym(aString):
+    if len(aString) == 0:
+        return False
+
+    for aChar in aString:
+        if _charIsSep(aChar):
+            return False
+
+    return True
 
 
 def _determine_case(was_upper, words, string):
@@ -33,11 +65,11 @@ def _determine_case(was_upper, words, string):
         - unknown: stringiable contains no words.
 
     """
-    case_type = 'unknown'
+    case_type = "unknown"
     if was_upper:
-        case_type = 'upper'
+        case_type = "upper"
     elif string.islower():
-        case_type = 'lower'
+        case_type = "lower"
     elif len(words) > 0:
         camel_case = words[0].islower()
         pascal_case = words[0].istitle() or words[0].isupper()
@@ -51,11 +83,11 @@ def _determine_case(was_upper, words, string):
                     break
 
         if camel_case:
-            case_type = 'camel'
+            case_type = "camel"
         elif pascal_case:
-            case_type = 'pascal'
+            case_type = "pascal"
         else:
-            case_type = 'mixed'
+            case_type = "mixed"
 
     return case_type
 
@@ -68,7 +100,7 @@ def _advanced_acronym_detection(s, i, words, acronyms):
     Return last index of new word groups.
     """
     # Combine each letter into single string.
-    acstr = ''.join(words[s:i])
+    acstr = "".join(words[s:i])
 
     # List of ranges representing found acronyms.
     range_list = []
@@ -78,7 +110,7 @@ def _advanced_acronym_detection(s, i, words, acronyms):
     # Search for each acronym in acstr.
     for acronym in acronyms:
         # TODO: Sanitize acronyms to include only letters.
-        rac = regex.compile(unicode(acronym))
+        rac = re.compile(acronym)
 
         # Loop until all instances of the acronym are found,
         # instead of just the first.
@@ -118,7 +150,7 @@ def _advanced_acronym_detection(s, i, words, acronyms):
     # Replace them with new word grouping.
     for j in xrange(len(range_list)):
         r = range_list[j]
-        words.insert(s + j, acstr[r[0]:r[1]])
+        words.insert(s + j, acstr[r[0] : r[1]])
 
     return s + len(range_list) - 1
 
@@ -126,14 +158,14 @@ def _advanced_acronym_detection(s, i, words, acronyms):
 def _simple_acronym_detection(s, i, words, *args):
     """Detect acronyms based on runs of upper-case letters."""
     # Combine each letter into a single string.
-    acronym = ''.join(words[s:i])
+    acronym = "".join(words[s:i])
 
     # Remove original letters in word list.
     for _ in xrange(s, i):
         del words[s]
 
     # Replace them with new word grouping.
-    words.insert(s, ''.join(acronym))
+    words.insert(s, "".join(acronym))
 
     return s
 
@@ -154,10 +186,9 @@ def _sanitize_acronyms(unsafe_acronyms):
     Normalize valid acronyms to upper-case.
     If an invalid acronym is encountered raise InvalidAcronymError.
     """
-    valid_acronym = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]+$')
     acronyms = []
     for a in unsafe_acronyms:
-        if valid_acronym.match(a):
+        if _isValidAcronym(a):
             acronyms.append(a.upper())
         else:
             raise InvalidAcronymError(a)
@@ -211,18 +242,18 @@ def _separate_words(string):
     # Iterate over each character, checking for boundaries, or places where
     # the stringiable should divided.
     while i <= len(string):
-        c = string[i:i + 1]
+        c = string[i : i + 1]
 
         split = False
         if i < len(string):
             # Detect upper-case letter as boundary.
-            if UPPER.match(c):
+            if _charIsUpper(c):
                 split = True
             # Detect transition from separator to not separator.
-            elif NOTSEP.match(c) and SEP.match(p):
+            elif not _charIsSep(c) and _charIsSep(p):
                 split = True
             # Detect transition not separator to separator.
-            elif SEP.match(c) and NOTSEP.match(p):
+            elif _charIsSep(c) and not _charIsSep(p):
                 split = True
         else:
             # The loop goes one extra iteration so that it can handle the
@@ -230,13 +261,13 @@ def _separate_words(string):
             split = True
 
         if split:
-            if NOTSEP.match(p):
+            if not _charIsSep(p):
                 words.append(string[s:i])
             else:
                 # stringiable contains at least one separator.
                 # Use the first one as the stringiable's primary separator.
                 if not separator:
-                    separator = string[s:s + 1]
+                    separator = string[s : s + 1]
 
                 # Use None to indicate a separator in the word list.
                 words.append(None)
@@ -291,7 +322,7 @@ def parse_case(string, acronyms=None, preserve_case=False):
     # Find runs of single upper-case letters.
     while i < len(words):
         word = words[i]
-        if word is not None and UPPER.match(word):
+        if word is not None and _isUpper(word):
             if s is None:
                 s = i
         elif s is not None:
