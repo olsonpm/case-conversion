@@ -14,7 +14,7 @@ def _charIsSep(aChar):
 
 
 def _isSep(aString):
-    return len(aString) == 1 and _charIsSep
+    return len(aString) == 1 and _charIsSep(aString)
 
 
 def _charIsNumberDecimalDigit(aChar):

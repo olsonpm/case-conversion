@@ -1,12 +1,15 @@
 [tool.poetry]
 name = "po.case_conversion"
-version = "0.2.0"
+version = "0.3.0"
 description = "Convert between different types of cases (unicode supported)"
 authors = ["Alejandro Frias <joker454@gmail.com>", "Philip Olson <philip.olson@pm.me>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/olsonpm/case-conversion"
-include = ["LICENSE.txt"]
+include = [
+  "po/case_conversion/LICENSE.txt",
+  "po/case_conversion/top_level.txt"
+]
 packages = [
   { include = "po" }
 ]
