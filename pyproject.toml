@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "po_case_conversion"
-version = "0.1.0"
+version = "0.4.0"
 description = "Convert between different types of cases (unicode supported)"
 authors = ["Alejandro Frias <joker454@gmail.com>", "Philip Olson <philip.olson@pm.me>"]
 license = "MIT"
