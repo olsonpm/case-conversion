@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """Unit test for case-conversion
 """
+import pytest
 
 import case_conversion
-from unittest import TestCase
-from parameterized import parameterized
+
 
 ACRONYMS = ['HTTP']
 ACRONYMS_UNICODE = [u'HÉÉP']
@@ -279,130 +279,125 @@ def _expand_values_preserve(preserve_values, values):
     return test_params
 
 
-class CaseConversionTest(TestCase):
-    @parameterized.expand(_expand_values(VALUES))
-    def test(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that don't preserve
-        capital/lower case letters.
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(_expand_values(VALUES))
+def test(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that don't preserve
+    capital/lower case letters.
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(_expand_values(VALUES_UNICODE))
-    def test_unicode(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that don't preserve
-        capital/lower case letters (with unicode characters).
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(_expand_values(VALUES_UNICODE))
+def test_unicode(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that don't preserve
+    capital/lower case letters (with unicode characters).
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(_expand_values(VALUES_SINGLE))
-    def test_single(self, _, case, value, expected):
-        """
-        Test conversions of single words from all cases to all cases that
-        don't preserve capital/lower case letters.
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(_expand_values(VALUES_SINGLE))
+def test_single(_, case, value, expected):
+    """
+    Test conversions of single words from all cases to all cases that
+    don't preserve capital/lower case letters.
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(_expand_values(VALUES_SINGLE_UNICODE))
-    def test_single_unicode(self, _, case, value, expected):
-        """
-        Test conversions of single words from all cases to all cases that
-        don't preserve capital/lower case letters (with unicode characters).
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(_expand_values(VALUES_SINGLE_UNICODE))
+def test_single_unicode(_, case, value, expected):
+    """
+    Test conversions of single words from all cases to all cases that
+    don't preserve capital/lower case letters (with unicode characters).
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(_expand_values_preserve(PRESERVE_VALUES, VALUES))
-    def test_preserve_case(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that do preserve
-        capital/lower case letters.
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(_expand_values_preserve(PRESERVE_VALUES, VALUES))
+def test_preserve_case(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that do preserve
+    capital/lower case letters.
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(
-        _expand_values_preserve(PRESERVE_VALUES_UNICODE, VALUES_UNICODE))
-    def test_preserve_case_unicode(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that do preserve
-        capital/lower case letters (with unicode characters).
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(
+    _expand_values_preserve(PRESERVE_VALUES_UNICODE, VALUES_UNICODE))
+def test_preserve_case_unicode(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that do preserve
+    capital/lower case letters (with unicode characters).
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(
-        _expand_values_preserve(PRESERVE_VALUES_SINGLE, VALUES_SINGLE))
-    def test_preserve_case_single(self, _, case, value, expected):
-        """
-        Test conversions of single words from all cases to all cases that do
-        preserve capital/lower case letters.
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(
+    _expand_values_preserve(PRESERVE_VALUES_SINGLE, VALUES_SINGLE))
+def test_preserve_case_single(_, case, value, expected):
+    """
+    Test conversions of single words from all cases to all cases that do
+    preserve capital/lower case letters.
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(
-        _expand_values_preserve(PRESERVE_VALUES_SINGLE_UNICODE,
-                                VALUES_SINGLE_UNICODE))
-    def test_preserve_case_single_unicode(self, _, case, value, expected):
-        """
-        Test conversions of single words from all cases to all cases that do
-        preserve capital/lower case letters (with unicode characters).
-        """
-        case_converter = getattr(case_conversion, case)
-        self.assertEqual(case_converter(value), expected)
+@pytest.mark.parametrize(
+    _expand_values_preserve(PRESERVE_VALUES_SINGLE_UNICODE,
+                            VALUES_SINGLE_UNICODE))
+def test_preserve_case_single_unicode(_, case, value, expected):
+    """
+    Test conversions of single words from all cases to all cases that do
+    preserve capital/lower case letters (with unicode characters).
+    """
+    case_converter = getattr(case_conversion, case)
+    self.assertEqual(case_converter(value), expected)
 
-    @parameterized.expand(_expand_values(VALUES_ACRONYM))
-    def test_acronyms(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that don't preserve
-        capital/lower case letters (with acronym detection).
-        """
-        case_converter = getattr(case_conversion, case)
-        result = case_converter(value, acronyms=ACRONYMS)
-        self.assertEqual(result, expected)
+@pytest.mark.parametrize(_expand_values(VALUES_ACRONYM))
+def test_acronyms(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that don't preserve
+    capital/lower case letters (with acronym detection).
+    """
+    case_converter = getattr(case_conversion, case)
+    result = case_converter(value, acronyms=ACRONYMS)
+    self.assertEqual(result, expected)
 
-    @parameterized.expand(_expand_values(VALUES_ACRONYM_UNICODE))
-    def test_acronyms_unicode(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that don't preserve
-        capital/lower case letters (with acronym detection and unicode
-        characters).
-        """
-        case_converter = getattr(case_conversion, case)
-        result = case_converter(value, acronyms=ACRONYMS_UNICODE)
-        self.assertEqual(result, expected)
+@pytest.mark.parametrize(_expand_values(VALUES_ACRONYM_UNICODE))
+def test_acronyms_unicode(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that don't preserve
+    capital/lower case letters (with acronym detection and unicode
+    characters).
+    """
+    case_converter = getattr(case_conversion, case)
+    result = case_converter(value, acronyms=ACRONYMS_UNICODE)
+    self.assertEqual(result, expected)
 
-    @parameterized.expand(
-        _expand_values_preserve(PRESERVE_VALUES_ACRONYM, VALUES_ACRONYM))
-    def test_acronyms_preserve_case(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that do preserve
-        capital/lower case letters (with acronym detection).
-        """
-        case_converter = getattr(case_conversion, case)
-        result = case_converter(value, acronyms=ACRONYMS)
-        self.assertEqual(result, expected)
+@pytest.mark.parametrize(
+    _expand_values_preserve(PRESERVE_VALUES_ACRONYM, VALUES_ACRONYM))
+def test_acronyms_preserve_case(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that do preserve
+    capital/lower case letters (with acronym detection).
+    """
+    case_converter = getattr(case_conversion, case)
+    result = case_converter(value, acronyms=ACRONYMS)
+    self.assertEqual(result, expected)
 
-    @parameterized.expand(
-        _expand_values_preserve(PRESERVE_VALUES_ACRONYM_UNICODE,
-                                VALUES_ACRONYM_UNICODE))
-    def test_acronyms_preserve_case_unicode(self, _, case, value, expected):
-        """
-        Test conversions from all cases to all cases that do preserve
-        capital/lower case letters (with acronym detection and unicode
-        characters).
-        """
-        case_converter = getattr(case_conversion, case)
-        result = case_converter(value, acronyms=ACRONYMS_UNICODE)
-        self.assertEqual(result, expected)
+@pytest.mark.parametrize(
+    _expand_values_preserve(PRESERVE_VALUES_ACRONYM_UNICODE,
+                            VALUES_ACRONYM_UNICODE))
+def test_acronyms_preserve_case_unicode(_, case, value, expected):
+    """
+    Test conversions from all cases to all cases that do preserve
+    capital/lower case letters (with acronym detection and unicode
+    characters).
+    """
+    case_converter = getattr(case_conversion, case)
+    result = case_converter(value, acronyms=ACRONYMS_UNICODE)
+    self.assertEqual(result, expected)
 
 
-if __name__ == '__main__':
-    from unittest import main
-
-    main()
