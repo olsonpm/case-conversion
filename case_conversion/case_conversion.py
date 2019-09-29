@@ -2,10 +2,6 @@ import sys
 
 import regex
 
-PYTHON2 = sys.version_info[0] < 3
-if not PYTHON2:
-    xrange = range
-    unicode = str
 
 UPPER = regex.compile(u'^[\p{Lu}]$')
 SEP = regex.compile(u'^[^\p{Ll}\p{Lu}\p{Nd}]$')
