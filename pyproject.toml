@@ -59,6 +59,9 @@ known_third_party = []
 line-length = 88
 target_version = ['py38']
 
+[tool.pytest]
+addopts = "--mypy"
+
 [flake8]
 ignore = ['D100','D101','D102','D103','D107','Q000','Z306']
 exclude = ['.git','__pycache__','docs/source/conf.py','old','build','dist']
@@ -67,14 +70,10 @@ max-line-length = 88
 
 [mypy]
 check_untyped_defs = true
-# disallow_subclassing_any = true
+disallow_subclassing_any = true
 ignore_missing_imports = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
 warn_redundant_casts = true
-
-# http://doc.pytest.org/en/latest/customize.html#adding-default-options
-[tool.pytest]
-addopts = "--mypy"
