@@ -51,6 +51,7 @@ keywords = ["case", "convert", "conversion"]
     cohesion = "*"
     vulture = "*"
     flynt = "^0.35.0"
+    pytest-annotate = "^1.0"
 
 [tool.isort]
 line_length = 88

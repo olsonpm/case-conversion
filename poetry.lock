@@ -661,6 +661,18 @@ version = "1.8.0"
 
 [[package]]
 category = "dev"
+description = "PyAnnotate: Auto-generate PEP-484 annotations"
+name = "pyannotate"
+optional = false
+python-versions = "*"
+version = "1.2.0"
+
+[package.dependencies]
+mypy-extensions = "*"
+six = "*"
+
+[[package]]
+category = "dev"
 description = "Python style guide checker"
 name = "pycodestyle"
 optional = false
@@ -734,6 +746,18 @@ wcwidth = "*"
 [package.dependencies.importlib-metadata]
 python = "<3.8"
 version = ">=0.12"
+
+[[package]]
+category = "dev"
+description = "pytest-annotate: Generate PyAnnotate annotations from your pytest tests."
+name = "pytest-annotate"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.5.0,!=3.5.1"
+version = "1.0.3"
+
+[package.dependencies]
+pyannotate = ">=1.0.0,<2.0.0"
+pytest = ">=3.2.0,<6.0.0"
 
 [[package]]
 category = "dev"
@@ -1055,7 +1079,7 @@ version = "0.6.0"
 more-itertools = "*"
 
 [metadata]
-content-hash = "c7aa3ee876d37862499e554284bebbc12789081cc4500f0943e58c1d6629f261"
+content-hash = "6020746e867fb4be8c824a2abeae15134500e27d0305d77885c6f78c54dd5708"
     python-versions = "^3.6"
 
 [metadata.hashes]
@@ -1122,6 +1146,7 @@ pep8-naming = ["01cb1dab2f3ce9045133d08449f1b6b93531dceacb9ef04f67087c11c723cea9
 pluggy = ["0db4b7601aae1d35b4a033282da476845aa19185c1e6964b25cf324b5e4ec3e6", "fa5fa1622fa6dd5c030e9cad086fa19ef6a0cf6d7a2d12318e10cb49d6d68f34"]
 pre-commit = ["1d3c0587bda7c4e537a46c27f2c84aa006acc18facf9970bf947df596ce91f3f", "fa78ff96e8e9ac94c748388597693f18b041a181c94a4f039ad20f45287ba44a"]
 py = ["64f65755aee5b381cea27766a3a147c3f15b9b6b9ac88676de66ba2ae36793fa", "dc639b046a6e2cff5bbe40194ad65936d6ba360b52b3c3fe1d08a82dd50b5e53"]
+pyannotate = ["04ed5804bab38153d5981fc92d83dcf6a22883453768561f057e777e5c057599", "bc2b5b4ea57aa90f99da9d71b547262eed19ea4b6ba355bf57439eeab9b90e93"]
 pycodestyle = ["95a2219d12372f05704562a14ec30bc76b05a5b297b21a5dfe3f6fac3491ae56", "e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c"]
 pydocstyle = ["04c84e034ebb56eb6396c820442b8c4499ac5eb94a3bda88951ac3dc519b6058", "66aff87ffe34b1e49bff2dd03a88ce6843be2f3346b0c9814410d34987fbab59"]
 pyflakes = ["17dbeb2e3f4d772725c777fabc446d5634d1038f234e77343108ce445ea69ce0", "d976835886f8c5b31d47970ed689944a0262b5f3afa00a5a7b4dc81e5449f8a2"]
@@ -1129,6 +1154,7 @@ pygments = ["71e430bc85c88a430f000ac1d9b331d2407f681d6f6aec95e8bcfbc3df5b0127", 
 pygments-pre-commit = ["39f593e8f1dcdc88dc901726c80366c517a4440ddc67eca5b6479c4b978fc962", "74acc72a19fc14e22461e675eebcf5be3d151aba0569cf45f6d4fb3dedf76e21"]
 pyparsing = ["6f98a7b9397e206d78cc01df10131398f1c8b8510a2f4d97d9abd82e1aacdd80", "d9338df12903bbf5d65a0e4e87c2161968b10d2e489652bb47001d82a9b028b4"]
 pytest = ["13c1c9b22127a77fc684eee24791efafcef343335d855e3573791c68588fe1a5", "d8ba7be9466f55ef96ba203fc0f90d0cf212f2f927e69186e1353e30bc7f62e5"]
+pytest-annotate = ["1ef5924aca93a7b47edaf46a38284fb5a173eed5e3b1a93ec00c8e35f0dd76ab", "356491bea0921c64bb690732f393dd4a0e1eaea27b6663f4b908d1d6d0351ca2"]
 pytest-cov = ["2b097cde81a302e1047331b48cadacf23577e431b61e9c6f49a1170bbe3d3da6", "e00ea4fdde970725482f1f35630d12f074e121a23801aabf2ae154ec6bdd343a"]
 pytest-forked = ["5fe33fbd07d7b1302c95310803a5e5726a4ff7f19d5a542b7ce57c76fed8135f", "d352aaced2ebd54d42a65825722cb433004b4446ab5d2044851d9cc7a00c9e38"]
 pytest-monkeytype = ["454291b21e466c62d37e395129f17186594a4c05cb15712e58dfefa084acba62", "6306ec8db48f31f932965c92c68846f8281d6c095aa230a6eddaab250fbce732"]
