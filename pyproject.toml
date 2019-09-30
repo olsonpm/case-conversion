@@ -10,6 +10,7 @@ keywords = ["case", "convert", "conversion"]
 
     [tool.poetry.dependencies]
     python = "^3.6"
+    regex = "^2019.8"
 
     [tool.poetry.dev-dependencies]
     mypy = "*"
@@ -49,6 +50,7 @@ keywords = ["case", "convert", "conversion"]
     radon = "*"
     cohesion = "*"
     vulture = "*"
+    flynt = "^0.35.0"
 
 [tool.isort]
 line_length = 88

@@ -3,401 +3,454 @@
 """
 import pytest
 
-import case_conversion
+from case_conversion import CaseConverter
 
 
-ACRONYMS = ['HTTP']
-ACRONYMS_UNICODE = [u'HÉÉP']
+ACRONYMS = ["HTTP"]
+ACRONYMS_UNICODE = ["HÉÉP"]
 
 CASES = [
-    'camelcase',
-    'pascalcase',
-    'snakecase',
-    'dashcase',
-    'spinalcase',
-    'kebabcase',
-    'constcase',
-    'screaming_snakecase',
-    'dotcase',
+    "camel",
+    "pascal",
+    "snake",
+    "dash",
+    #"spinal",
+    #"kebab",
+    "const",
+    #"screaming_snake",
+    "dot",
 ]
 
-CASES_PRESERVE = [
-    'separate_words',
-    'slashcase',
-    'backslashcase',
-]
+CASES_PRESERVE = ["separate_words", "slash", "backslash"]
 
 VALUES = {
-    'camelcase': 'fooBarString',
-    'pascalcase': 'FooBarString',
-    'snakecase': 'foo_bar_string',
-    'dashcase': 'foo-bar-string',
-    'spinalcase': 'foo-bar-string',
-    'kebabcase': 'foo-bar-string',
-    'constcase': 'FOO_BAR_STRING',
-    'screaming_snakecase': 'FOO_BAR_STRING',
-    'dotcase': 'foo.bar.string',
-    'separate_words': 'foo bar string',
-    'slashcase': 'foo/bar/string',
-    'backslashcase': 'foo\\bar\\string',
+    "camel": "fooBarString",
+    "pascal": "FooBarString",
+    "snake": "foo_bar_string",
+    "dash": "foo-bar-string",
+    # "spinal": "foo-bar-string",
+    # "kebab": "foo-bar-string",
+    "const": "FOO_BAR_STRING",
+    #"screaming_snake": "FOO_BAR_STRING",
+    "dot": "foo.bar.string",
+    "separate_words": "foo bar string",
+    "slash": "foo/bar/string",
+    "backslash": "foo\\bar\\string",
 }
 
 VALUES_UNICODE = {
-    'camelcase': u'fóoBarString',
-    'pascalcase': u'FóoBarString',
-    'snakecase': u'fóo_bar_string',
-    'dashcase': u'fóo-bar-string',
-    'spinalcase': u'fóo-bar-string',
-    'kebabcase': u'fóo-bar-string',
-    'constcase': u'FÓO_BAR_STRING',
-    'screaming_snakecase': u'FÓO_BAR_STRING',
-    'dotcase': u'fóo.bar.string',
-    'separate_words': u'fóo bar string',
-    'slashcase': u'fóo/bar/string',
-    'backslashcase': u'fóo\\bar\\string',
+    "camel": "fóoBarString",
+    "pascal": "FóoBarString",
+    "snake": "fóo_bar_string",
+    "dash": "fóo-bar-string",
+    # "spinal": "fóo-bar-string",
+    # "kebab": "fóo-bar-string",
+    "const": "FÓO_BAR_STRING",
+    #"screaming_snake": "FÓO_BAR_STRING",
+    "dot": "fóo.bar.string",
+    "separate_words": "fóo bar string",
+    "slash": "fóo/bar/string",
+    "backslash": "fóo\\bar\\string",
 }
 
 VALUES_SINGLE = {
-    'camelcase': 'foo',
-    'pascalcase': 'Foo',
-    'snakecase': 'foo',
-    'dashcase': 'foo',
-    'spinalcase': 'foo',
-    'kebabcase': 'foo',
-    'constcase': 'FOO',
-    'screaming_snakecase': 'FOO',
-    'dotcase': 'foo',
-    'separate_words': 'foo',
-    'slashcase': 'foo',
-    'backslashcase': 'foo',
+    "camel": "foo",
+    "pascal": "Foo",
+    "snake": "foo",
+    "dash": "foo",
+    # "spinal": "foo",
+    # "kebab": "foo",
+    "const": "FOO",
+    #"screaming_snake": "FOO",
+    "dot": "foo",
+    "separate_words": "foo",
+    "slash": "foo",
+    "backslash": "foo",
 }
 
 VALUES_SINGLE_UNICODE = {
-    'camelcase': u'fóo',
-    'pascalcase': u'Fóo',
-    'snakecase': u'fóo',
-    'dashcase': u'fóo',
-    'spinalcase': u'fóo',
-    'kebabcase': u'fóo',
-    'constcase': u'FÓO',
-    'screaming_snakecase': u'FÓO',
-    'dotcase': u'fóo',
-    'separate_words': u'fóo',
-    'slashcase': u'fóo',
-    'backslashcase': u'fóo',
+    "camel": "fóo",
+    "pascal": "Fóo",
+    "snake": "fóo",
+    "dash": "fóo",
+    # "spinal": "fóo",
+    # "kebab": "fóo",
+    "const": "FÓO",
+    #"screaming_snake": "FÓO",
+    "dot": "fóo",
+    "separate_words": "fóo",
+    "slash": "fóo",
+    "backslash": "fóo",
 }
 
 VALUES_ACRONYM = {
-    'camelcase': 'fooHTTPBarString',
-    'pascalcase': 'FooHTTPBarString',
-    'snakecase': 'foo_http_bar_string',
-    'dashcase': 'foo-http-bar-string',
-    'spinalcase': 'foo-http-bar-string',
-    'kebabcase': 'foo-http-bar-string',
-    'constcase': 'FOO_HTTP_BAR_STRING',
-    'screaming_snakecase': 'FOO_HTTP_BAR_STRING',
-    'dotcase': 'foo.http.bar.string',
-    'separate_words': 'foo http bar string',
-    'slashcase': 'foo/http/bar/string',
-    'backslashcase': 'foo\\http\\bar\\string',
+    "camel": "fooHTTPBarString",
+    "pascal": "FooHTTPBarString",
+    "snake": "foo_http_bar_string",
+    "dash": "foo-http-bar-string",
+    # "spinal": "foo-http-bar-string",
+    # "kebab": "foo-http-bar-string",
+    "const": "FOO_HTTP_BAR_STRING",
+    #"screaming_snake": "FOO_HTTP_BAR_STRING",
+    "dot": "foo.http.bar.string",
+    "separate_words": "foo http bar string",
+    "slash": "foo/http/bar/string",
+    "backslash": "foo\\http\\bar\\string",
 }
 
 VALUES_ACRONYM_UNICODE = {
-    'camelcase': u'fooHÉÉPBarString',
-    'pascalcase': u'FooHÉÉPBarString',
-    'snakecase': u'foo_héép_bar_string',
-    'dashcase': u'foo-héép-bar-string',
-    'spinalcase': u'foo-héép-bar-string',
-    'kebabcase': u'foo-héép-bar-string',
-    'constcase': u'FOO_HÉÉP_BAR_STRING',
-    'screaming_snakecase': u'FOO_HÉÉP_BAR_STRING',
-    'dotcase': u'foo.héép.bar.string',
-    'separate_words': u'foo héép bar string',
-    'slashcase': u'foo/héép/bar/string',
-    'backslashcase': u'foo\\héép\\bar\\string',
+    "camel": "fooHÉÉPBarString",
+    "pascal": "FooHÉÉPBarString",
+    "snake": "foo_héép_bar_string",
+    "dash": "foo-héép-bar-string",
+    # "spinal": "foo-héép-bar-string",
+    # "kebab": "foo-héép-bar-string",
+    "const": "FOO_HÉÉP_BAR_STRING",
+    #"screaming_snake": "FOO_HÉÉP_BAR_STRING",
+    "dot": "foo.héép.bar.string",
+    "separate_words": "foo héép bar string",
+    "slash": "foo/héép/bar/string",
+    "backslash": "foo\\héép\\bar\\string",
 }
 
 PRESERVE_VALUES = {
-    'separate_words': {'camelcase': 'foo Bar String',
-                       'pascalcase': 'Foo Bar String',
-                       'constcase': 'FOO BAR STRING',
-                       'screaming_snakecase': 'FOO BAR STRING',
-                       'default': 'foo bar string'},
-    'slashcase': {'camelcase': 'foo/Bar/String',
-                  'pascalcase': 'Foo/Bar/String',
-                  'constcase': 'FOO/BAR/STRING',
-                  'screaming_snakecase': 'FOO/BAR/STRING',
-                  'default': 'foo/bar/string'},
-    'backslashcase': {'camelcase': 'foo\\Bar\\String',
-                      'pascalcase': 'Foo\\Bar\\String',
-                      'constcase': 'FOO\\BAR\\STRING',
-                      'screaming_snakecase': 'FOO\\BAR\\STRING',
-                      'default': 'foo\\bar\\string'},
+    "separate_words": {
+        "camel": "foo Bar String",
+        "pascal": "Foo Bar String",
+        "const": "FOO BAR STRING",
+        #"screaming_snake": "FOO BAR STRING",
+        "default": "foo bar string",
+    },
+    "slash": {
+        "camel": "foo/Bar/String",
+        "pascal": "Foo/Bar/String",
+        "const": "FOO/BAR/STRING",
+        #"screaming_snake": "FOO/BAR/STRING",
+        "default": "foo/bar/string",
+    },
+    "backslash": {
+        "camel": "foo\\Bar\\String",
+        "pascal": "Foo\\Bar\\String",
+        "const": "FOO\\BAR\\STRING",
+        #"screaming_snake": "FOO\\BAR\\STRING",
+        "default": "foo\\bar\\string",
+    },
 }
 
 PRESERVE_VALUES_UNICODE = {
-    'separate_words': {'camelcase': u'fóo Bar String',
-                       'pascalcase': u'Fóo Bar String',
-                       'constcase': u'FÓO BAR STRING',
-                       'screaming_snakecase': u'FÓO BAR STRING',
-                       'default': u'fóo bar string'},
-    'slashcase': {'camelcase': u'fóo/Bar/String',
-                  'pascalcase': u'Fóo/Bar/String',
-                  'constcase': u'FÓO/BAR/STRING',
-                  'screaming_snakecase': u'FÓO/BAR/STRING',
-                  'default': u'fóo/bar/string'},
-    'backslashcase': {'camelcase': u'fóo\\Bar\\String',
-                      'pascalcase': u'Fóo\\Bar\\String',
-                      'constcase': u'FÓO\\BAR\\STRING',
-                      'screaming_snakecase': u'FÓO\\BAR\\STRING',
-                      'default': u'fóo\\bar\\string'},
+    "separate_words": {
+        "camel": "fóo Bar String",
+        "pascal": "Fóo Bar String",
+        "const": "FÓO BAR STRING",
+        #"screaming_snake": "FÓO BAR STRING",
+        "default": "fóo bar string",
+    },
+    "slash": {
+        "camel": "fóo/Bar/String",
+        "pascal": "Fóo/Bar/String",
+        "const": "FÓO/BAR/STRING",
+        #"screaming_snake": "FÓO/BAR/STRING",
+        "default": "fóo/bar/string",
+    },
+    "backslash": {
+        "camel": "fóo\\Bar\\String",
+        "pascal": "Fóo\\Bar\\String",
+        "const": "FÓO\\BAR\\STRING",
+        #"screaming_snake": "FÓO\\BAR\\STRING",
+        "default": "fóo\\bar\\string",
+    },
 }
 
 PRESERVE_VALUES_SINGLE = {
-    'separate_words': {'camelcase': 'foo',
-                       'pascalcase': 'Foo',
-                       'constcase': 'FOO',
-                       'screaming_snakecase': 'FOO',
-                       'default': 'foo'},
-    'slashcase': {'camelcase': 'foo',
-                  'pascalcase': 'Foo',
-                  'constcase': 'FOO',
-                  'screaming_snakecase': 'FOO',
-                  'default': 'foo'},
-    'backslashcase': {'camelcase': 'foo',
-                      'pascalcase': 'Foo',
-                      'constcase': 'FOO',
-                      'screaming_snakecase': 'FOO',
-                      'default': 'foo'},
+    "separate_words": {
+        "camel": "foo",
+        "pascal": "Foo",
+        "const": "FOO",
+        # #"screaming_snake": "FOO",
+        "default": "foo",
+    },
+    "slash": {
+        "camel": "foo",
+        "pascal": "Foo",
+        "const": "FOO",
+        # #"screaming_snake": "FOO",
+        "default": "foo",
+    },
+    "backslash": {
+        "camel": "foo",
+        "pascal": "Foo",
+        "const": "FOO",
+        # #"screaming_snake": "FOO",
+        "default": "foo",
+    },
 }
 
 PRESERVE_VALUES_SINGLE_UNICODE = {
-    'separate_words': {'camelcase': u'fóo',
-                       'pascalcase': u'Fóo',
-                       'constcase': u'FÓO',
-                       'screaming_snakecase': u'FÓO',
-                       'default': u'fóo'},
-    'slashcase': {'camelcase': u'fóo',
-                  'pascalcase': u'Fóo',
-                  'constcase': u'FÓO',
-                  'screaming_snakecase': u'FÓO',
-                  'default': u'fóo'},
-    'backslashcase': {'camelcase': u'fóo',
-                      'pascalcase': u'Fóo',
-                      'constcase': u'FÓO',
-                      'screaming_snakecase': u'FÓO',
-                      'default': u'fóo'},
+    "separate_words": {
+        "camel": "fóo",
+        "pascal": "Fóo",
+        "const": "FÓO",
+        # #"screaming_snake": "FÓO",
+        "default": "fóo",
+    },
+    "slash": {
+        "camel": "fóo",
+        "pascal": "Fóo",
+        "const": "FÓO",
+        # #"screaming_snake": "FÓO",
+        "default": "fóo",
+    },
+    "backslash": {
+        "camel": "fóo",
+        "pascal": "Fóo",
+        "const": "FÓO",
+        # #"screaming_snake": "FÓO",
+        "default": "fóo",
+    },
 }
 
 PRESERVE_VALUES_ACRONYM = {
-    'separate_words': {'camelcase': 'foo HTTP Bar String',
-                       'pascalcase': 'Foo HTTP Bar String',
-                       'constcase': 'FOO HTTP BAR STRING',
-                       'screaming_snakecase': 'FOO HTTP BAR STRING',
-                       'default': 'foo http bar string'},
-    'slashcase': {'camelcase': 'foo/HTTP/Bar/String',
-                  'pascalcase': 'Foo/HTTP/Bar/String',
-                  'constcase': 'FOO/HTTP/BAR/STRING',
-                  'screaming_snakecase': 'FOO/HTTP/BAR/STRING',
-                  'default': 'foo/http/bar/string'},
-    'backslashcase': {'camelcase': 'foo\\HTTP\\Bar\\String',
-                      'pascalcase': 'Foo\\HTTP\\Bar\\String',
-                      'constcase': 'FOO\\HTTP\\BAR\\STRING',
-                      'screaming_snakecase': 'FOO\\HTTP\\BAR\\STRING',
-                      'default': 'foo\\http\\bar\\string'},
+    "separate_words": {
+        "camel": "foo HTTP Bar String",
+        "pascal": "Foo HTTP Bar String",
+        "const": "FOO HTTP BAR STRING",
+        # #"screaming_snake": "FOO HTTP BAR STRING",
+        "default": "foo http bar string",
+    },
+    "slash": {
+        "camel": "foo/HTTP/Bar/String",
+        "pascal": "Foo/HTTP/Bar/String",
+        "const": "FOO/HTTP/BAR/STRING",
+        # #"screaming_snake": "FOO/HTTP/BAR/STRING",
+        "default": "foo/http/bar/string",
+    },
+    "backslash": {
+        "camel": "foo\\HTTP\\Bar\\String",
+        "pascal": "Foo\\HTTP\\Bar\\String",
+        "const": "FOO\\HTTP\\BAR\\STRING",
+        # #"screaming_snake": "FOO\\HTTP\\BAR\\STRING",
+        "default": "foo\\http\\bar\\string",
+    },
 }
 
 PRESERVE_VALUES_ACRONYM_UNICODE = {
-    'separate_words': {'camelcase': u'foo HÉÉP Bar String',
-                       'pascalcase': u'Foo HÉÉP Bar String',
-                       'constcase': u'FOO HÉÉP BAR STRING',
-                       'screaming_snakecase': u'FOO HÉÉP BAR STRING',
-                       'default': u'foo héép bar string'},
-    'slashcase': {'camelcase': u'foo/HÉÉP/Bar/String',
-                  'pascalcase': u'Foo/HÉÉP/Bar/String',
-                  'constcase': u'FOO/HÉÉP/BAR/STRING',
-                  'screaming_snakecase': u'FOO/HÉÉP/BAR/STRING',
-                  'default': u'foo/héép/bar/string'},
-    'backslashcase': {'camelcase': u'foo\\HÉÉP\\Bar\\String',
-                      'pascalcase': u'Foo\\HÉÉP\\Bar\\String',
-                      'constcase': u'FOO\\HÉÉP\\BAR\\STRING',
-                      'screaming_snakecase': u'FOO\\HÉÉP\\BAR\\STRING',
-                      'default': u'foo\\héép\\bar\\string'},
+    "separate_words": {
+        "camel": "foo HÉÉP Bar String",
+        "pascal": "Foo HÉÉP Bar String",
+        "const": "FOO HÉÉP BAR STRING",
+        # #"screaming_snake": "FOO HÉÉP BAR STRING",
+        "default": "foo héép bar string",
+    },
+    "slash": {
+        "camel": "foo/HÉÉP/Bar/String",
+        "pascal": "Foo/HÉÉP/Bar/String",
+        "const": "FOO/HÉÉP/BAR/STRING",
+        # #"screaming_snake": "FOO/HÉÉP/BAR/STRING",
+        "default": "foo/héép/bar/string",
+    },
+    "backslash": {
+        "camel": "foo\\HÉÉP\\Bar\\String",
+        "pascal": "Foo\\HÉÉP\\Bar\\String",
+        "const": "FOO\\HÉÉP\\BAR\\STRING",
+        # #"screaming_snake": "FOO\\HÉÉP\\BAR\\STRING",
+        "default": "foo\\héép\\bar\\string",
+    },
 }
 
 
 PRESERVE_VALUES_ACRONYM_SINGLE = {
-    'separate_words': {'camelcase': 'HTTP',
-                       'pascalcase': 'HTTP',
-                       'constcase': 'HTTP',
-                       'screaming_snakecase': 'HTTP',
-                       'default': 'http'},
-    'slashcase': {'camelcase': 'HTTP',
-                  'pascalcase': 'HTTP',
-                  'constcase': 'HTTP',
-                  'screaming_snakecase': 'HTTP',
-                  'default': 'http'},
-    'backslashcase': {'camelcase': 'HTTP',
-                      'pascalcase': 'HTTP',
-                      'constcase': 'HTTP',
-                      'screaming_snakecase': 'HTTP',
-                      'default': 'http'},
+    "separate_words": {
+        "camel": "HTTP",
+        "pascal": "HTTP",
+        "const": "HTTP",
+        #"screaming_snake": "HTTP",
+        "default": "http",
+    },
+    "slash": {
+        "camel": "HTTP",
+        "pascal": "HTTP",
+        "const": "HTTP",
+        #"screaming_snake": "HTTP",
+        "default": "http",
+    },
+    "backslash": {
+        "camel": "HTTP",
+        "pascal": "HTTP",
+        "const": "HTTP",
+        #"screaming_snake": "HTTP",
+        "default": "http",
+    },
 }
 
-CAPITAL_CASES = [
-    'camelcase',
-    'pascalcase',
-    'constcase',
-    'screaming_snakecase',
-]
+CAPITAL_CASES = ["camel", "pascal", "const", "screaming_snake"]
 
 
 def _expand_values(values):
     test_params = []
     for case in CASES:
-        test_params.extend([
-            (name + '2' + case,
-             case,
-             value,
-             values[case]) for name, value in values.items()
-        ])
-        test_params.append((case + '_empty', case, '', ''))
+        test_params.extend(
+            [
+                (name + "2" + case, case, value, values[case])
+                for name, value in values.items()
+            ]
+        )
+        test_params.append((case + "_empty", case, "", ""))
     return test_params
 
 
 def _expand_values_preserve(preserve_values, values):
     test_params = []
     for case in CASES_PRESERVE:
-        test_params.extend([
-            (name + '2' + case,
-             case,
-             value,
-             preserve_values[case][name if name in CAPITAL_CASES else 'default'])  # nopep8
-            for name, value in values.items()
-        ])
-        test_params.append((case + '_empty', case, '', ''))
+        test_params.extend(
+            [
+                (
+                    name + "2" + case,
+                    case,
+                    value,
+                    preserve_values[case][name if name in CAPITAL_CASES else "default"],
+                )  # nopep8
+                for name, value in values.items()
+            ]
+        )
+        test_params.append((case + "_empty", case, "", ""))
     return test_params
 
 
-@pytest.mark.parametrize(_expand_values(VALUES))
-def test(_, case, value, expected):
+def _case_check(case, value, expected):
+    case_converter = getattr(CaseConverter, case)
+    assert case_converter(value) == expected
+
+
+@pytest.mark.parametrize("name,case,value,expected", _expand_values(VALUES))
+def test(name, case, value, expected):
     """
     Test conversions from all cases to all cases that don't preserve
     capital/lower case letters.
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
 
-@pytest.mark.parametrize(_expand_values(VALUES_UNICODE))
-def test_unicode(_, case, value, expected):
+
+@pytest.mark.parametrize("name,case,value,expected", _expand_values(VALUES_UNICODE))
+def test_unicode(name, case, value, expected):
     """
     Test conversions from all cases to all cases that don't preserve
     capital/lower case letters (with unicode characters).
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
 
-@pytest.mark.parametrize(_expand_values(VALUES_SINGLE))
-def test_single(_, case, value, expected):
+
+@pytest.mark.parametrize("name,case,value,expected", _expand_values(VALUES_SINGLE))
+def test_single(name, case, value, expected):
     """
     Test conversions of single words from all cases to all cases that
     don't preserve capital/lower case letters.
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
 
-@pytest.mark.parametrize(_expand_values(VALUES_SINGLE_UNICODE))
-def test_single_unicode(_, case, value, expected):
+
+@pytest.mark.parametrize(
+    "name,case,value,expected", _expand_values(VALUES_SINGLE_UNICODE)
+)
+def test_single_unicode(name, case, value, expected):
     """
     Test conversions of single words from all cases to all cases that
     don't preserve capital/lower case letters (with unicode characters).
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
 
-@pytest.mark.parametrize(_expand_values_preserve(PRESERVE_VALUES, VALUES))
-def test_preserve_case(_, case, value, expected):
+
+@pytest.mark.parametrize(
+    "name,case,value,expected", _expand_values_preserve(PRESERVE_VALUES, VALUES)
+)
+def test_preserve_case(name, case, value, expected):
     """
     Test conversions from all cases to all cases that do preserve
     capital/lower case letters.
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
+
 
 @pytest.mark.parametrize(
-    _expand_values_preserve(PRESERVE_VALUES_UNICODE, VALUES_UNICODE))
-def test_preserve_case_unicode(_, case, value, expected):
+    "name,case,value,expected",
+    _expand_values_preserve(PRESERVE_VALUES_UNICODE, VALUES_UNICODE),
+)
+def test_preserve_case_unicode(name, case, value, expected):
     """
     Test conversions from all cases to all cases that do preserve
     capital/lower case letters (with unicode characters).
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
+
 
 @pytest.mark.parametrize(
-    _expand_values_preserve(PRESERVE_VALUES_SINGLE, VALUES_SINGLE))
-def test_preserve_case_single(_, case, value, expected):
+    "name,case,value,expected",
+    _expand_values_preserve(PRESERVE_VALUES_SINGLE, VALUES_SINGLE),
+)
+def test_preserve_case_single(name, case, value, expected):
     """
     Test conversions of single words from all cases to all cases that do
     preserve capital/lower case letters.
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
+    _case_check(case, value, expected)
+
 
 @pytest.mark.parametrize(
-    _expand_values_preserve(PRESERVE_VALUES_SINGLE_UNICODE,
-                            VALUES_SINGLE_UNICODE))
-def test_preserve_case_single_unicode(_, case, value, expected):
+    "name,case,value,expected",
+    _expand_values_preserve(PRESERVE_VALUES_SINGLE_UNICODE, VALUES_SINGLE_UNICODE),
+)
+def test_preserve_case_single_unicode(name, case, value, expected):
     """
     Test conversions of single words from all cases to all cases that do
     preserve capital/lower case letters (with unicode characters).
     """
-    case_converter = getattr(case_conversion, case)
-    self.assertEqual(case_converter(value), expected)
-
-@pytest.mark.parametrize(_expand_values(VALUES_ACRONYM))
-def test_acronyms(_, case, value, expected):
-    """
-    Test conversions from all cases to all cases that don't preserve
-    capital/lower case letters (with acronym detection).
-    """
-    case_converter = getattr(case_conversion, case)
-    result = case_converter(value, acronyms=ACRONYMS)
-    self.assertEqual(result, expected)
-
-@pytest.mark.parametrize(_expand_values(VALUES_ACRONYM_UNICODE))
-def test_acronyms_unicode(_, case, value, expected):
-    """
-    Test conversions from all cases to all cases that don't preserve
-    capital/lower case letters (with acronym detection and unicode
-    characters).
-    """
-    case_converter = getattr(case_conversion, case)
-    result = case_converter(value, acronyms=ACRONYMS_UNICODE)
-    self.assertEqual(result, expected)
-
-@pytest.mark.parametrize(
-    _expand_values_preserve(PRESERVE_VALUES_ACRONYM, VALUES_ACRONYM))
-def test_acronyms_preserve_case(_, case, value, expected):
-    """
-    Test conversions from all cases to all cases that do preserve
-    capital/lower case letters (with acronym detection).
-    """
-    case_converter = getattr(case_conversion, case)
-    result = case_converter(value, acronyms=ACRONYMS)
-    self.assertEqual(result, expected)
-
-@pytest.mark.parametrize(
-    _expand_values_preserve(PRESERVE_VALUES_ACRONYM_UNICODE,
-                            VALUES_ACRONYM_UNICODE))
-def test_acronyms_preserve_case_unicode(_, case, value, expected):
-    """
-    Test conversions from all cases to all cases that do preserve
-    capital/lower case letters (with acronym detection and unicode
-    characters).
-    """
-    case_converter = getattr(case_conversion, case)
-    result = case_converter(value, acronyms=ACRONYMS_UNICODE)
-    self.assertEqual(result, expected)
+    _case_check(case, value, expected)
 
 
+# @pytest.mark.parametrize("name,case,value,expected", _expand_values(VALUES_ACRONYM))
+# def test_acronyms(name, case, value, expected):
+#     """
+#     Test conversions from all cases to all cases that don't preserve
+#     capital/lower case letters (with acronym detection).
+#     """
+#     case_converter = getattr(case_conversion, case)
+#     result = case_converter(value, acronyms=ACRONYMS)
+#     assert case_converter(result) == expected
+
+
+# @pytest.mark.parametrize("name,case,value,expected", _expand_values(VALUES_ACRONYM_UNICODE))
+# def test_acronyms_unicode(name, case, value, expected):
+#     """
+#     Test conversions from all cases to all cases that don't preserve
+#     capital/lower case letters (with acronym detection and unicode
+#     characters).
+#     """
+#     case_converter = getattr(case_conversion, case)
+#     result = case_converter(value, acronyms=ACRONYMS_UNICODE)
+#     assert case_converter(result) == expected
+
+
+# @pytest.mark.parametrize(
+#     _expand_values_preserve(PRESERVE_VALUES_ACRONYM, VALUES_ACRONYM)
+# )
+# def test_acronyms_preserve_case(name, case, value, expected):
+#     """
+#     Test conversions from all cases to all cases that do preserve
+#     capital/lower case letters (with acronym detection).
+#     """
+#     case_converter = getattr(case_conversion, case)
+#     result = case_converter(value, acronyms=ACRONYMS)
+#     assert case_converter(result) == expected
+
+
+# @pytest.mark.parametrize(
+#     _expand_values_preserve(PRESERVE_VALUES_ACRONYM_UNICODE, VALUES_ACRONYM_UNICODE)
+# )
+# def test_acronyms_preserve_case_unicode(name, case, value, expected):
+#     """
+#     Test conversions from all cases to all cases that do preserve
+#     capital/lower case letters (with acronym detection and unicode
+#     characters).
+#     """
+#     case_converter = getattr(case_conversion, case)
+#     result = case_converter(value, acronyms=ACRONYMS_UNICODE)
+#     assert case_converter(result) == expected

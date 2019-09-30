@@ -2,57 +2,23 @@ import sys
 
 import regex
 
-
-UPPER = regex.compile(u'^[\p{Lu}]$')
-SEP = regex.compile(u'^[^\p{Ll}\p{Lu}\p{Nd}]$')
-NOTSEP = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]$')
+__all__ = ("InvalidAcronymError", "CaseConverter",)
 
 
-def aliased(klass):
-    """
-    Use in combination with `@alias` decorator.
-
-    Classes decorated with @aliased will have their aliased methods
-    (via @alias) actually aliased.
-    """
-    methods = klass.__dict__.copy()
-    for method in methods.values():
-        if hasattr(method, '_aliases'):
-            # add aliases but don't override attributes of 'klass'
-            try:
-                for alias in method._aliases - set(methods):
-                    setattr(klass, alias, method)
-            except TypeError:
-                pass
-    return klass
+UPPER = regex.compile("^[\p{Lu}]$")
+SEP = regex.compile("^[^\p{Ll}\p{Lu}\p{Nd}]$")
+NOTSEP = regex.compile("^[\p{Ll}\p{Lu}\p{Nd}]$")
 
 
-class alias(object):
-    """
-    Decorator for aliasing method names.
-
-    Only works within classes decorated with '@aliased'
-    """
-
-    def __init__(self, *aliases):
-        self.aliases = set(aliases)
-
-    def __call__(self, f):
-        f._aliases = self.aliases
-        return f
-
-
-class InvalidAcronymError(Exception):
+class InvalidAcronymError(ValueError):
     """Raise when acronym fails validation."""
 
     def __init__(self, acronym):
+        print(f"Case Conversion: acronym '{acronym}' is invalid.")
         super(InvalidAcronymError, self).__init__()
-        m = "Case Conversion: acronym '{}' is invalid."
-        print(m.format(acronym))
 
 
-@aliased
-class CaseConverter(object):
+class CaseConverter:
     """Main Class."""
 
     @staticmethod
@@ -77,11 +43,11 @@ class CaseConverter(object):
             - unknown: stringiable contains no words.
 
         """
-        case_type = 'unknown'
+        case_type = "unknown"
         if was_upper:
-            case_type = 'upper'
+            case_type = "upper"
         elif string.islower():
-            case_type = 'lower'
+            case_type = "lower"
         elif len(words) > 0:
             camel_case = words[0].islower()
             pascal_case = words[0].istitle() or words[0].isupper()
@@ -95,11 +61,11 @@ class CaseConverter(object):
                         break
 
             if camel_case:
-                case_type = 'camel'
+                case_type = "camel"
             elif pascal_case:
-                case_type = 'pascal'
+                case_type = "pascal"
             else:
-                case_type = 'mixed'
+                case_type = "mixed"
 
         return case_type
 
@@ -112,7 +78,7 @@ class CaseConverter(object):
         Return last index of new word groups.
         """
         # Combine each letter into single string.
-        acstr = ''.join(words[s:i])
+        acstr = "".join(words[s:i])
 
         # List of ranges representing found acronyms.
         range_list = []
@@ -161,7 +127,7 @@ class CaseConverter(object):
         # Replace them with new word grouping.
         for j in xrange(len(range_list)):
             r = range_list[j]
-            words.insert(s + j, acstr[r[0]:r[1]])
+            words.insert(s + j, acstr[r[0] : r[1]])
 
         return s + len(range_list) - 1
 
@@ -169,14 +135,14 @@ class CaseConverter(object):
     def _simple_acronym_detection(s, i, words, *args):
         """Detect acronyms based on runs of upper-case letters."""
         # Combine each letter into a single string.
-        acronym = ''.join(words[s:i])
+        acronym = "".join(words[s:i])
 
         # Remove original letters in word list.
         for _ in xrange(s, i):
             del words[s]
 
         # Replace them with new word grouping.
-        words.insert(s, ''.join(acronym))
+        words.insert(s, "".join(acronym))
 
         return s
 
@@ -188,7 +154,7 @@ class CaseConverter(object):
         Normalize valid acronyms to upper-case.
         If an invalid acronym is encountered raise InvalidAcronymError.
         """
-        valid_acronym = regex.compile(u'^[\p{Ll}\p{Lu}\p{Nd}]+$')
+        valid_acronym = regex.compile("^[\p{Ll}\p{Lu}\p{Nd}]+$")
         acronyms = []
         for a in unsafe_acronyms:
             if valid_acronym.match(a):
@@ -246,7 +212,7 @@ class CaseConverter(object):
         # Iterate over each character, checking for boundaries, or places
         # where the stringiable should divided.
         while curr_i <= len(string):
-            char = string[curr_i:curr_i + 1]
+            char = string[curr_i : curr_i + 1]
 
             split = False
             if curr_i < len(string):
@@ -271,7 +237,7 @@ class CaseConverter(object):
                     # stringiable contains at least one separator.
                     # Use the first one as the stringiable's primary separator.
                     if not separator:
-                        separator = string[seq_i:seq_i + 1]
+                        separator = string[seq_i : seq_i + 1]
 
                     # Use None to indicate a separator in the word list.
                     words.append(None)
@@ -369,9 +335,9 @@ class CaseConverter(object):
         words, _case, _sep = cls.parse_case(text, acronyms)
         if words:
             words[0] = words[0].lower()
-        return ''.join(words)
+        return "".join(words)
 
-    @alias('mixed')
+    # @alias("mixed")
     @classmethod
     def pascal(cls, text, acronyms=None):
         """Return text in PascalCase style (aka MixedCase).
@@ -387,7 +353,7 @@ class CaseConverter(object):
         'HelloHTMLWorld'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return ''.join(words)
+        return "".join(words)
 
     @classmethod
     def snake(cls, text, acronyms=None):
@@ -404,9 +370,9 @@ class CaseConverter(object):
         'hello_html_world'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return '_'.join([w.lower() for w in words])
+        return "_".join([w.lower() for w in words])
 
-    @alias('kebap', 'spinal', 'slug')
+    # @alias("kebap", "spinal", "slug")
     @classmethod
     def dash(cls, text, acronyms=None):
         """Return text in dash-case style (aka kebab-case, spinal-case).
@@ -422,10 +388,10 @@ class CaseConverter(object):
         'hello-html-world'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return '-'.join([w.lower() for w in words])
+        return "-".join([w.lower() for w in words])
 
-    @alias('screaming')
     @classmethod
+    # @alias("screaming",)
     def const(cls, text, acronyms=None):
         """Return text in CONST_CASE style (aka SCREAMING_SNAKE_CASE).
 
@@ -440,7 +406,7 @@ class CaseConverter(object):
         'HELLO_HTML_WORLD'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return '_'.join([w.upper() for w in words])
+        return "_".join([w.upper() for w in words])
 
     @classmethod
     def dot(cls, text, acronyms=None):
@@ -457,7 +423,7 @@ class CaseConverter(object):
         'hello.html.world'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return '.'.join([w.lower() for w in words])
+        return ".".join([w.lower() for w in words])
 
     @classmethod
     def separate_words(cls, text, acronyms=None):
@@ -474,7 +440,7 @@ class CaseConverter(object):
         'hello HTML World'
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
-        return ' '.join(words)
+        return " ".join(words)
 
     @classmethod
     def slash(cls, text, acronyms=None):
@@ -491,7 +457,7 @@ class CaseConverter(object):
         'hello/HTML/World'
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
-        return '/'.join(words)
+        return "/".join(words)
 
     @classmethod
     def backslash(cls, text, acronyms=None):
@@ -509,37 +475,37 @@ class CaseConverter(object):
         True
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
-        return '\\'.join(words)
+        return "\\".join(words)
 
-    @alias('camel_snake')
+    # @alias("camel_snake")
     @classmethod
     def ada(cls, text, acronyms=None):
-        r"""Return text in Ada_Case style."""
+        """Return text in Ada_Case style."""
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return '_'.join([w.capitalize() for w in words])
+        return "_".join([w.capitalize() for w in words])
 
     @classmethod
     def title(cls, text, acronyms=None):
-        r"""Return text in Title_case style."""
+        """Return text in Title_case style."""
         return cls.snake(text, acronyms).capitalize()
 
     @classmethod
     def lower(cls, text, acronyms=None):
-        r"""Return text in lowercase style."""
+        """Return text in lowercase style."""
         return text.lower()
 
     @classmethod
     def upper(cls, text, acronyms=None):
-        r"""Return text in UPPERCASE style."""
+        """Return text in UPPERCASE style."""
         return text.upper()
 
     @classmethod
     def capital(cls, text, acronyms=None):
-        r"""Return text in UPPERCASE style."""
+        """Return text in UPPERCASE style."""
         return text.capitalize()
 
     @classmethod
     def http_header(cls, text, acronyms=None):
-        r"""Return text in Http-Header-Case style."""
+        """Return text in Http-Header-Case style."""
         words, _case, _sep = cls.parse_case(text, acronyms)
-        return '-'.join([w.capitalize() for w in words])
+        return "-".join([w.capitalize() for w in words])
