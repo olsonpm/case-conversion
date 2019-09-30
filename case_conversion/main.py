@@ -171,10 +171,9 @@ class CaseConverter:
             if words[i].upper() in acronyms:
                 # Convert known acronyms to upper-case.
                 words[i] = words[i].upper()
-            else:
+            elif not words[i].isupper():
                 # Fallback behavior: Preserve case on upper-case words.
-                if not words[i].isupper():
-                    words[i] = words[i].capitalize()
+                words[i] = words[i].capitalize()
         return words
 
     @classmethod
@@ -319,7 +318,7 @@ class CaseConverter:
         return words, case_type, separator
 
     @classmethod
-    def camel(cls, text, acronyms=None):
+    def camel(cls, text: str, acronyms=None):
         """Return text in camelCase style.
 
         Args:
@@ -339,7 +338,7 @@ class CaseConverter:
 
     # @alias("mixed")
     @classmethod
-    def pascal(cls, text, acronyms=None):
+    def pascal(cls, text: str, acronyms=None):
         """Return text in PascalCase style (aka MixedCase).
 
         Args:
@@ -356,7 +355,7 @@ class CaseConverter:
         return "".join(words)
 
     @classmethod
-    def snake(cls, text, acronyms=None):
+    def snake(cls, text: str, acronyms=None):
         """Return text in snake_case style.
 
         Args:
@@ -374,7 +373,7 @@ class CaseConverter:
 
     # @alias("kebap", "spinal", "slug")
     @classmethod
-    def dash(cls, text, acronyms=None):
+    def dash(cls, text: str, acronyms=None):
         """Return text in dash-case style (aka kebab-case, spinal-case).
 
         Args:
@@ -392,7 +391,7 @@ class CaseConverter:
 
     @classmethod
     # @alias("screaming",)
-    def const(cls, text, acronyms=None):
+    def const(cls, text: str, acronyms=None):
         """Return text in CONST_CASE style (aka SCREAMING_SNAKE_CASE).
 
         Args:
@@ -409,7 +408,7 @@ class CaseConverter:
         return "_".join([w.upper() for w in words])
 
     @classmethod
-    def dot(cls, text, acronyms=None):
+    def dot(cls, text: str, acronyms=None):
         """Return text in dot.case style.
 
         Args:
@@ -426,7 +425,7 @@ class CaseConverter:
         return ".".join([w.lower() for w in words])
 
     @classmethod
-    def separate_words(cls, text, acronyms=None):
+    def separate_words(cls, text: str, acronyms=None):
         """Return text in "seperate words" style.
 
         Args:
@@ -443,7 +442,7 @@ class CaseConverter:
         return " ".join(words)
 
     @classmethod
-    def slash(cls, text, acronyms=None):
+    def slash(cls, text: str, acronyms=None):
         """Return text in slash/case style.
 
         Args:
@@ -460,7 +459,7 @@ class CaseConverter:
         return "/".join(words)
 
     @classmethod
-    def backslash(cls, text, acronyms=None):
+    def backslash(cls, text: str, acronyms=None):
         r"""Return text in backslash\case style.
 
         Args:
@@ -479,33 +478,33 @@ class CaseConverter:
 
     # @alias("camel_snake")
     @classmethod
-    def ada(cls, text, acronyms=None):
+    def ada(cls, text: str, acronyms=None):
         """Return text in Ada_Case style."""
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "_".join([w.capitalize() for w in words])
 
     @classmethod
-    def title(cls, text, acronyms=None):
+    def title(cls, text: str, acronyms=None):
         """Return text in Title_case style."""
         return cls.snake(text, acronyms).capitalize()
 
     @classmethod
-    def lower(cls, text, acronyms=None):
+    def lower(cls, text: str, acronyms=None):
         """Return text in lowercase style."""
         return text.lower()
 
     @classmethod
-    def upper(cls, text, acronyms=None):
+    def upper(cls, text: str, acronyms=None):
         """Return text in UPPERCASE style."""
         return text.upper()
 
     @classmethod
-    def capital(cls, text, acronyms=None):
+    def capital(cls, text: str, acronyms=None):
         """Return text in UPPERCASE style."""
         return text.capitalize()
 
     @classmethod
-    def http_header(cls, text, acronyms=None):
+    def http_header(cls, text: str, acronyms=None):
         """Return text in Http-Header-Case style."""
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "-".join([w.capitalize() for w in words])
