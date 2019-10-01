@@ -335,16 +335,18 @@ class CaseConverter:
 
     @classmethod
     def camel(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in camelCase style.
+        """Converts text to camelCase style.
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> camelcase("hello world")
+        Returns:
+            str: Case converted text.
+
+        >>> camel("hello world")
         'helloWorld'
-        >>> camelcase("HELLO_HTML_WORLD", True, ["HTML"])
+        >>> camel("HELLO_HTML_WORLD", ["HTML"])
         'helloHTMLWorld'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
@@ -354,19 +356,21 @@ class CaseConverter:
 
     @classmethod
     def pascal(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in PascalCase style.
+        """Converts text to PascalCase style.
 
         Synonyms:
-            - MixedCase
+            MixedCase
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> pascalcase("hello world")
+        Returns:
+            str: Case converted text.
+
+        >>> pascal("hello world")
         'HelloWorld'
-        >>> pascalcase("HELLO_HTML_WORLD", True, ["HTML"])
+        >>> pascal("HELLO_HTML_WORLD", ["HTML"])
         'HelloHTMLWorld'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
@@ -374,16 +378,18 @@ class CaseConverter:
 
     @classmethod
     def snake(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in snake_case style.
+        """Converts text to snake_case style.
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> snakecase("hello world")
+        Returns:
+            str: Case converted text.
+
+        >>> snake("hello world")
         'hello_world'
-        >>> snakecase("HelloHTMLWorld", True, ["HTML"])
+        >>> snake("HelloHTMLWorld", ["HTML"])
         'hello_html_world'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
@@ -391,21 +397,23 @@ class CaseConverter:
 
     @classmethod
     def dash(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in dash-case style.
+        """Converts text to dash-case style.
 
         Synonyms:
-            - kebab-case
-            - spinal-case
-            - slug-case
+            kebab-case
+            spinal-case
+            slug-case
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> dashcase("hello world")
+        Returns:
+            str: Case converted text.
+
+        >>> dash("hello world")
         'hello-world'
-        >>> dashcase("HelloHTMLWorld", True, ["HTML"])
+        >>> dash("HelloHTMLWorld", ["HTML"])
         'hello-html-world'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
@@ -413,10 +421,10 @@ class CaseConverter:
 
     @classmethod
     def const(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in CONST_CASE style.
+        """Converts text to CONST_CASE style.
 
         Synonyms:
-            - SCREAMING_SNAKE_CASE
+            SCREAMING_SNAKE_CASE
 
         Args:
             text: input string to convert case
@@ -433,16 +441,18 @@ class CaseConverter:
 
     @classmethod
     def dot(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in dot.case style.
+        """Converts text to dot.case style.
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> dotcase("hello world")
+        Returns:
+            str: Case converted text.
+
+        >>> dot("hello world")
         'hello.world'
-        >>> dotcase("helloHTMLWorld", True, ["HTML"])
+        >>> dot("helloHTMLWorld", ["HTML"])
         'hello.html.world'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
@@ -450,16 +460,18 @@ class CaseConverter:
 
     @classmethod
     def separate_words(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in "seperate words" style.
+        """Converts text to "seperate words" style.
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
 
         >>> separate_words("HELLO_WORLD")
         'HELLO WORLD'
-        >>> separate_words("helloHTMLWorld", True, ["HTML"])
+        >>> separate_words("helloHTMLWorld", ["HTML"])
         'hello HTML World'
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
@@ -467,16 +479,18 @@ class CaseConverter:
 
     @classmethod
     def slash(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in slash/case style.
+        """Converts text to slash/case style.
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> slashcase("HELLO_WORLD")
+        Returns:
+            str: Case converted text.
+
+        >>> slash("HELLO_WORLD")
         'HELLO/WORLD'
-        >>> slashcase("helloHTMLWorld", True, ["HTML"])
+        >>> slash("helloHTMLWorld", ["HTML"])
         'hello/HTML/World'
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
@@ -484,54 +498,132 @@ class CaseConverter:
 
     @classmethod
     def backslash(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        r"""Return text in backslash\case style.
+        r"""Converts text to backslash\case style.
 
         Args:
-            text: input string to convert case
-            detect_acronyms: should attempt to detect acronyms
-            acronyms: a list of acronyms to detect
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
 
-        >>> backslashcase("HELLO_WORLD") == r'HELLO\WORLD'
-        True
-        >>> backslashcase("helloHTMLWorld",
-            True, ["HTML"]) == r'hello\HTML\World'
-        True
+        Returns:
+            str: Case converted text.
+
+        >>> backslash("HELLO_WORLD")
+        'HELLO\WORLD'
+        >>> backslash("helloHTMLWorld", ["HTML"])
+        'hello\HTML\World'
         """
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
         return "\\".join(words)
 
     @classmethod
     def ada(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in Ada_Case style.
+        """Converts text to Ada_Case style.
 
         Synonyms:
-            - camel_snake_case
+            camel_snake_case
+
+        Args:
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
+
+        >>> http_header("hello world")
+        'Hello_World'
+        >>> http_header("HELLO_HTML_WORLD", ["HTML"])
+        'Hello_HTML_World'
         """
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "_".join([w.capitalize() for w in words])
 
     @classmethod
     def title(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in Title_case style."""
+        """Converts text to Title_case style.
+
+        Args:
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
+
+        >>> http_header("hello world")
+        'Hello World'
+        >>> http_header("HELLO_HTML_WORLD", ["HTML"])
+        'Hello_HTML_World'
+        """
         return cls.snake(text, acronyms).capitalize()
 
     @classmethod
     def lower(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in lowercase style."""
+        """Converts text to lowercase style.
+
+        Args:
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
+
+        >>> http_header("HELLO WORLD")
+        'hello world'
+        >>> http_header("HELLO_HTML_WORLD", ["HTML"])
+        'hello_HTML_world'
+        """
         return text.lower()
 
     @classmethod
     def upper(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in UPPERCASE style."""
+        """Converts text to UPPERCASE style.
+
+        Args:
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
+
+        >>> http_header("hello world")
+        'HELLO WORLD'
+        >>> http_header("HELLO_HTML_WORLD", ["HTML"])
+        'HELLO_HTML_WORLD'
+        """
         return text.upper()
 
     @classmethod
     def capital(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in Capitalcase style."""
+        """Converts text to Capitalcase style.
+
+        Args:
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
+
+        >>> http_header("hello world")
+        'Helloworld'
+        >>> http_header("HELLO_HTML_WORLD", ["HTML"])
+        'HelloHTMLworld'
+        """
         return text.capitalize()
 
     @classmethod
     def http_header(cls, text: str, acronyms: OptStrSeq = None) -> str:
-        """Return text in Http-Header-Case style."""
+        """Converts text to Http-Header-Case style.
+
+        Args:
+            text (str): input string to convert case
+            acronyms (Optional[Sequence[str]]): a list of acronyms to detect
+
+        Returns:
+            str: Case converted text.
+
+        >>> http_header("hello world")
+        'HelloWorld'
+        >>> http_header("HELLO_HTML_WORLD", ["HTML"])
+        'Hello-HTML-World'
+        """
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "-".join([w.capitalize() for w in words])
