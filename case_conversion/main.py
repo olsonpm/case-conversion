@@ -1,9 +1,13 @@
+from enum import Enum, unique
 import sys
+from typing import Any, Sequence, Tuple, Optional
 
 import regex
 
-__all__ = ("InvalidAcronymError", "CaseConverter",)
+__all__ = ("InvalidAcronymError", "Case", "CaseConverter")
 
+StrSeq = Sequence[str]
+OptStrSeq = Optional[StrSeq]
 
 UPPER = regex.compile("^[\p{Lu}]$")
 SEP = regex.compile("^[^\p{Ll}\p{Lu}\p{Nd}]$")
@@ -13,16 +17,26 @@ NOTSEP = regex.compile("^[\p{Ll}\p{Lu}\p{Nd}]$")
 class InvalidAcronymError(ValueError):
     """Raise when acronym fails validation."""
 
-    def __init__(self, acronym):
+    def __init__(self, acronym: str) -> None:
         print(f"Case Conversion: acronym '{acronym}' is invalid.")
         super(InvalidAcronymError, self).__init__()
+
+
+@unique
+class Case(Enum):
+    UNKOWN = "unknown"
+    UPPER = "upper"
+    LOWER = "lower"
+    CAMEL = "camel"
+    PASCAL = "pascal"
+    MIXED = "mixed"
 
 
 class CaseConverter:
     """Main Class."""
 
     @staticmethod
-    def _determine_case(was_upper, words, string):
+    def _determine_case(was_upper: bool, words: StrSeq, string: str) -> Case:
         """
         Determine case type of string.
 
@@ -43,11 +57,11 @@ class CaseConverter:
             - unknown: stringiable contains no words.
 
         """
-        case_type = "unknown"
+        case_type = Case.UNKOWN
         if was_upper:
-            case_type = "upper"
+            case_type = Case.UPPER
         elif string.islower():
-            case_type = "lower"
+            case_type = Case.LOWER
         elif len(words) > 0:
             camel_case = words[0].islower()
             pascal_case = words[0].istitle() or words[0].isupper()
@@ -61,16 +75,18 @@ class CaseConverter:
                         break
 
             if camel_case:
-                case_type = "camel"
+                case_type = Case.CAMEL
             elif pascal_case:
-                case_type = "pascal"
+                case_type = Case.PASCAL
             else:
-                case_type = "mixed"
+                case_type = Case.MIXED
 
         return case_type
 
     @staticmethod
-    def _advanced_acronym_detection(s, i, words, acronyms):
+    def _advanced_acronym_detection(
+        s: int, i: int, words: StrSeq, acronyms: StrSeq
+    ) -> int:
         """
         Detect acronyms by checking against a list of acronyms.
 
@@ -132,7 +148,7 @@ class CaseConverter:
         return s + len(range_list) - 1
 
     @staticmethod
-    def _simple_acronym_detection(s, i, words, *args):
+    def _simple_acronym_detection(s: int, i: int, words: StrSeq, *args: Any) -> int:
         """Detect acronyms based on runs of upper-case letters."""
         # Combine each letter into a single string.
         acronym = "".join(words[s:i])
@@ -143,11 +159,10 @@ class CaseConverter:
 
         # Replace them with new word grouping.
         words.insert(s, "".join(acronym))
-
         return s
 
     @staticmethod
-    def _sanitize_acronyms(unsafe_acronyms):
+    def _sanitize_acronyms(unsafe_acronyms: StrSeq) -> StrSeq:
         """
         Check acronyms against regex.
 
@@ -164,7 +179,7 @@ class CaseConverter:
         return acronyms
 
     @staticmethod
-    def _normalize_words(words, acronyms):
+    def _normalize_words(words: StrSeq, acronyms: StrSeq) -> StrSeq:
         """Normalize case of each word to PascalCase."""
         for i, _ in enumerate(words):
             # if detect_acronyms:
@@ -177,7 +192,7 @@ class CaseConverter:
         return words
 
     @classmethod
-    def _segment_string(cls, string):
+    def _segment_string(cls, string: str) -> Tuple[StrSeq, str, bool]:
         """
         Segment string on separator into list of words.
 
@@ -212,7 +227,6 @@ class CaseConverter:
         # where the stringiable should divided.
         while curr_i <= len(string):
             char = string[curr_i : curr_i + 1]
-
             split = False
             if curr_i < len(string):
                 # Detect upper-case letter as boundary.
@@ -252,7 +266,9 @@ class CaseConverter:
         return words, separator, was_upper
 
     @classmethod
-    def parse_case(cls, string, acronyms=None, preserve_case=False):
+    def parse_case(
+        cls, string: str, acronyms: OptStrSeq = None, preserve_case: bool = False
+    ) -> Tuple[StrSeq, Case, str]:
         """
         Parse a stringiable into a list of words.
 
@@ -318,7 +334,7 @@ class CaseConverter:
         return words, case_type, separator
 
     @classmethod
-    def camel(cls, text: str, acronyms=None):
+    def camel(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in camelCase style.
 
         Args:
@@ -336,10 +352,12 @@ class CaseConverter:
             words[0] = words[0].lower()
         return "".join(words)
 
-    # @alias("mixed")
     @classmethod
-    def pascal(cls, text: str, acronyms=None):
-        """Return text in PascalCase style (aka MixedCase).
+    def pascal(cls, text: str, acronyms: OptStrSeq = None) -> str:
+        """Return text in PascalCase style.
+
+        Synonyms:
+            - MixedCase
 
         Args:
             text: input string to convert case
@@ -355,7 +373,7 @@ class CaseConverter:
         return "".join(words)
 
     @classmethod
-    def snake(cls, text: str, acronyms=None):
+    def snake(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in snake_case style.
 
         Args:
@@ -371,10 +389,14 @@ class CaseConverter:
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "_".join([w.lower() for w in words])
 
-    # @alias("kebap", "spinal", "slug")
     @classmethod
-    def dash(cls, text: str, acronyms=None):
-        """Return text in dash-case style (aka kebab-case, spinal-case).
+    def dash(cls, text: str, acronyms: OptStrSeq = None) -> str:
+        """Return text in dash-case style.
+
+        Synonyms:
+            - kebab-case
+            - spinal-case
+            - slug-case
 
         Args:
             text: input string to convert case
@@ -390,9 +412,11 @@ class CaseConverter:
         return "-".join([w.lower() for w in words])
 
     @classmethod
-    # @alias("screaming",)
-    def const(cls, text: str, acronyms=None):
-        """Return text in CONST_CASE style (aka SCREAMING_SNAKE_CASE).
+    def const(cls, text: str, acronyms: OptStrSeq = None) -> str:
+        """Return text in CONST_CASE style.
+
+        Synonyms:
+            - SCREAMING_SNAKE_CASE
 
         Args:
             text: input string to convert case
@@ -408,7 +432,7 @@ class CaseConverter:
         return "_".join([w.upper() for w in words])
 
     @classmethod
-    def dot(cls, text: str, acronyms=None):
+    def dot(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in dot.case style.
 
         Args:
@@ -425,7 +449,7 @@ class CaseConverter:
         return ".".join([w.lower() for w in words])
 
     @classmethod
-    def separate_words(cls, text: str, acronyms=None):
+    def separate_words(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in "seperate words" style.
 
         Args:
@@ -442,7 +466,7 @@ class CaseConverter:
         return " ".join(words)
 
     @classmethod
-    def slash(cls, text: str, acronyms=None):
+    def slash(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in slash/case style.
 
         Args:
@@ -459,7 +483,7 @@ class CaseConverter:
         return "/".join(words)
 
     @classmethod
-    def backslash(cls, text: str, acronyms=None):
+    def backslash(cls, text: str, acronyms: OptStrSeq = None) -> str:
         r"""Return text in backslash\case style.
 
         Args:
@@ -476,35 +500,38 @@ class CaseConverter:
         words, _case, _sep = cls.parse_case(text, acronyms, preserve_case=True)
         return "\\".join(words)
 
-    # @alias("camel_snake")
     @classmethod
-    def ada(cls, text: str, acronyms=None):
-        """Return text in Ada_Case style."""
+    def ada(cls, text: str, acronyms: OptStrSeq = None) -> str:
+        """Return text in Ada_Case style.
+
+        Synonyms:
+            - camel_snake_case
+        """
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "_".join([w.capitalize() for w in words])
 
     @classmethod
-    def title(cls, text: str, acronyms=None):
+    def title(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in Title_case style."""
         return cls.snake(text, acronyms).capitalize()
 
     @classmethod
-    def lower(cls, text: str, acronyms=None):
+    def lower(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in lowercase style."""
         return text.lower()
 
     @classmethod
-    def upper(cls, text: str, acronyms=None):
+    def upper(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in UPPERCASE style."""
         return text.upper()
 
     @classmethod
-    def capital(cls, text: str, acronyms=None):
-        """Return text in UPPERCASE style."""
+    def capital(cls, text: str, acronyms: OptStrSeq = None) -> str:
+        """Return text in Capitalcase style."""
         return text.capitalize()
 
     @classmethod
-    def http_header(cls, text: str, acronyms=None):
+    def http_header(cls, text: str, acronyms: OptStrSeq = None) -> str:
         """Return text in Http-Header-Case style."""
         words, _case, _sep = cls.parse_case(text, acronyms)
         return "-".join([w.capitalize() for w in words])
