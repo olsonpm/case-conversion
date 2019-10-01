@@ -24,6 +24,15 @@ class InvalidAcronymError(ValueError):
 
 @unique
 class Case(Enum):
+    # - upper: All words are upper-case.
+    # - lower: All words are lower-case.
+    # - pascal: All words are title-case or upper-case. Note that the
+    #           stringiable may still have separators.
+    # - camel: First word is lower-case, the rest are title-case or
+    #          upper-case. stringiable may still have separators.
+    # - mixed: Any other mixing of word casing. Never occurs if there are
+    #          no separators.
+    # - unknown: stringiable contains no words.
     UNKOWN = "unknown"
     UPPER = "upper"
     LOWER = "lower"
@@ -41,20 +50,12 @@ class CaseConverter:
         Determine case type of string.
 
         Arguments:
-            was_upper {[type]} -- [description]
-            words {[type]} -- [description]
-            string {[type]} -- [description]
+            was_upper (bool) -- [description]
+            words {Sequence[str]} -- [description]
+            string {str} -- [description]
 
         Returns:
-            - upper: All words are upper-case.
-            - lower: All words are lower-case.
-            - pascal: All words are title-case or upper-case. Note that the
-                      stringiable may still have separators.
-            - camel: First word is lower-case, the rest are title-case or
-                     upper-case. stringiable may still have separators.
-            - mixed: Any other mixing of word casing. Never occurs if there are
-                     no separators.
-            - unknown: stringiable contains no words.
+            Case: TODO: fill this out
 
         """
         case_type = Case.UNKOWN
@@ -103,7 +104,8 @@ class CaseConverter:
 
         # Search for each acronym in acstr.
         for acronym in acronyms:
-            rac = regex.compile(unicode(acronym))
+            # rac = regex.compile(unicode(acronym))
+            rac = regex.compile(acronym)
 
             # Loop until all instances of the acronym are found,
             # instead of just the first.
@@ -125,7 +127,7 @@ class CaseConverter:
 
                 if ok:
                     range_list.append((a, b))
-                    for j in xrange(a, b):
+                    for j in range(a, b):
                         not_range.remove(j)
 
         # Add remaining letters as ranges.
@@ -137,11 +139,11 @@ class CaseConverter:
         range_list.sort()
 
         # Remove original letters in word list.
-        for _ in xrange(s, i):
+        for _ in range(s, i):
             del words[s]
 
         # Replace them with new word grouping.
-        for j in xrange(len(range_list)):
+        for j in range(len(range_list)):
             r = range_list[j]
             words.insert(s + j, acstr[r[0] : r[1]])
 
@@ -154,7 +156,7 @@ class CaseConverter:
         acronym = "".join(words[s:i])
 
         # Remove original letters in word list.
-        for _ in xrange(s, i):
+        for _ in range(s, i):
             del words[s]
 
         # Replace them with new word grouping.
@@ -313,7 +315,6 @@ class CaseConverter:
             elif s is not None:
                 i = check_acronym(s, i, words, acronyms) + 1
                 s = None
-
             i += 1
 
         if s is not None:

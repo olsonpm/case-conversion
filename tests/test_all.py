@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Unit test for case-conversion
+"""Unit tests for case-conversion
 """
 import pytest
 
@@ -278,11 +278,11 @@ def _expand_values(values):
     for case in CASES:
         test_params.extend(
             [
-                (name + "2" + case, case, value, values[case])
+                (f"{name}2{case}", case, value, values[case])
                 for name, value in values.items()
             ]
         )
-        test_params.append((case + "_empty", case, "", ""))
+        test_params.append((f"{case}_empty", case, "", ""))
     return test_params
 
 
@@ -292,7 +292,7 @@ def _expand_values_preserve(preserve_values, values):
         test_params.extend(
             [
                 (
-                    name + "2" + case,
+                    f"{name}2{case}",
                     case,
                     value,
                     preserve_values[case][name if name in CAPITAL_CASES else "default"],
@@ -300,7 +300,7 @@ def _expand_values_preserve(preserve_values, values):
                 for name, value in values.items()
             ]
         )
-        test_params.append((case + "_empty", case, "", ""))
+        test_params.append((f"{case}_empty", case, "", ""))
     return test_params
 
 
@@ -406,7 +406,7 @@ def test_acronyms(name, case, value, expected):
     Test conversions from all cases to all cases that don't preserve
     capital/lower case letters (with acronym detection).
     """
-    _case_check_with_acronymes(case, value, expected, ACRONYM)
+    _case_check_with_acronymes(case, value, expected, ACRONYMS)
 
 
 @pytest.mark.parametrize(
@@ -430,7 +430,7 @@ def test_acronyms_preserve_case(name, case, value, expected):
     Test conversions from all cases to all cases that do preserve
     capital/lower case letters (with acronym detection).
     """
-    _case_check_with_acronymes(case, value, expected, ACRONYM)
+    _case_check_with_acronymes(case, value, expected, ACRONYMS)
 
 
 @pytest.mark.parametrize(
