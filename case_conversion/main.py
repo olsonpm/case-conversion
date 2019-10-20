@@ -8,7 +8,7 @@ __all__ = ("InvalidAcronymError", "Case", "CaseConverter")
 StrSeq = Sequence[str]
 OptStrSeq = Optional[StrSeq]
 
-def _getNonOverlappingRanges(a_str, sub):
+def _getSubstringRanges(a_str, sub):
     start = 0
     subLen = len(sub)
     while True:
@@ -16,7 +16,7 @@ def _getNonOverlappingRanges(a_str, sub):
         if start == -1:
             return
         yield (start, start + subLen)
-        start += subLen
+        start += 1
 
 
 def _charIsSep(aChar):
@@ -144,10 +144,18 @@ class CaseConverter:
 
         # Search for each acronym in acstr.
         for acronym in acronyms:
-            for (a, b) in _getNonOverlappingRanges(acstr, acronym):
-                range_list.append((a, b))
-                for j in xrange(a, b):
-                    not_range.remove(j)
+            for (a, b) in _getSubstringRanges(acstr, acronym):
+                # Make sure found acronym doesn't overlap with others.
+                ok = True
+                for r in range_list:
+                    if a < r[1] and b > r[0]:
+                        ok = False
+                        break
+
+                if ok:
+                    range_list.append((a, b))
+                    for j in range(a, b):
+                        not_range.remove(j)
 
         # Add remaining letters as ranges.
         for nr in not_range:
