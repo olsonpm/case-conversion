@@ -1,17 +1,57 @@
 from enum import Enum, unique
-import sys
 from typing import Any, Sequence, Tuple, Optional
-
-import regex
+import sys
+import unicodedata
 
 __all__ = ("InvalidAcronymError", "Case", "CaseConverter")
 
 StrSeq = Sequence[str]
 OptStrSeq = Optional[StrSeq]
 
-UPPER = regex.compile("^[\p{Lu}]$")
-SEP = regex.compile("^[^\p{Ll}\p{Lu}\p{Nd}]$")
-NOTSEP = regex.compile("^[\p{Ll}\p{Lu}\p{Nd}]$")
+def _getNonOverlappingRanges(a_str, sub):
+    start = 0
+    subLen = len(sub)
+    while True:
+        start = a_str.find(sub, start)
+        if start == -1:
+            return
+        yield (start, start + subLen)
+        start += subLen
+
+
+def _charIsSep(aChar):
+    return (
+        not _charIsUpper(aChar)
+        and not _charIsLower(aChar)
+        and not _charIsNumberDecimalDigit(aChar)
+    )
+
+
+def _charIsNumberDecimalDigit(aChar):
+    return unicodedata.category(aChar) == "Nd"
+
+
+def _charIsLower(aChar):
+    return unicodedata.category(aChar) == "Ll"
+
+
+def _charIsUpper(aChar):
+    return unicodedata.category(aChar) == "Lu"
+
+
+def _isUpper(aString):
+    return len(aString) == 1 and _charIsUpper(aString)
+
+
+def _isValidAcronym(aString):
+    if len(aString) == 0:
+        return False
+
+    for aChar in aString:
+        if _charIsSep(aChar):
+            return False
+
+    return True
 
 
 class InvalidAcronymError(ValueError):
@@ -104,31 +144,10 @@ class CaseConverter:
 
         # Search for each acronym in acstr.
         for acronym in acronyms:
-            # rac = regex.compile(unicode(acronym))
-            rac = regex.compile(acronym)
-
-            # Loop until all instances of the acronym are found,
-            # instead of just the first.
-            n = 0
-            while True:
-                m = rac.search(acstr, n)
-                if not m:
-                    break
-
-                a, b = m.start(), m.end()
-                n = b
-
-                # Make sure found acronym doesn't overlap with others.
-                ok = True
-                for r in range_list:
-                    if a < r[1] and b > r[0]:
-                        ok = False
-                        break
-
-                if ok:
-                    range_list.append((a, b))
-                    for j in range(a, b):
-                        not_range.remove(j)
+            for (a, b) in _getNonOverlappingRanges(acstr, acronym):
+                range_list.append((a, b))
+                for j in xrange(a, b):
+                    not_range.remove(j)
 
         # Add remaining letters as ranges.
         for nr in not_range:
@@ -166,15 +185,14 @@ class CaseConverter:
     @staticmethod
     def _sanitize_acronyms(unsafe_acronyms: StrSeq) -> StrSeq:
         """
-        Check acronyms against regex.
 
         Normalize valid acronyms to upper-case.
-        If an invalid acronym is encountered raise InvalidAcronymError.
+        If an invalid acronym is encountered (contains separators)
+        raise InvalidAcronymError.
         """
-        valid_acronym = regex.compile("^[\p{Ll}\p{Lu}\p{Nd}]+$")
         acronyms = []
         for a in unsafe_acronyms:
-            if valid_acronym.match(a):
+            if _isValidAcronym(a):
                 acronyms.append(a.upper())
             else:
                 raise InvalidAcronymError(a)
@@ -232,13 +250,13 @@ class CaseConverter:
             split = False
             if curr_i < len(string):
                 # Detect upper-case letter as boundary.
-                if UPPER.match(char):
+                if _charIsUpper(char):
                     split = True
                 # Detect transition from separator to not separator.
-                elif NOTSEP.match(char) and SEP.match(prev_i):
+                elif not _charIsSep(char) and _charIsSep(prev_i):
                     split = True
                 # Detect transition not separator to separator.
-                elif SEP.match(char) and NOTSEP.match(prev_i):
+                elif _charIsSep(char) and not _charIsSep(prev_i):
                     split = True
             else:
                 # The looprev_igoes one extra iteration so that it can
@@ -246,7 +264,7 @@ class CaseConverter:
                 split = True
 
             if split:
-                if NOTSEP.match(prev_i):
+                if not _charIsSep(prev_i):
                     words.append(string[seq_i:curr_i])
                 else:
                     # stringiable contains at least one separator.
@@ -309,7 +327,7 @@ class CaseConverter:
         # Find runs of single upper-case letters.
         while i < len(words):
             word = words[i]
-            if word is not None and UPPER.match(word):
+            if word is not None and _isUpper(word):
                 if s is None:
                     s = i
             elif s is not None:

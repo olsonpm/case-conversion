@@ -3,7 +3,6 @@ setup(
     name='case_conversion',
     version='3.0.0',
     packages=['case_conversion'],
-    install_requires=['regex>=2016.2.25'],
     description='Convert between different types of cases (unicode supported)',
     license='MIT',
     author='Alejandro Frias',
